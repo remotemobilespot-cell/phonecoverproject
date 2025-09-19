@@ -1,0 +1,52 @@
+<svg width="185" height="415" viewBox="0 0 185 415" xmlns="http://www.w3.org/2000/svg">
+  <!-- Samsung Galaxy S24+ Case Template -->
+  <defs>
+    <linearGradient id="s24plusGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2d3748" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#4a5568" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1a202c" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Case outline - premium aluminum frame -->
+  <rect x="8" y="8" width="169" height="399" rx="20" ry="20" 
+        fill="none" stroke="url(#s24plusGrad)" stroke-width="3"/>
+        
+  <!-- Volume buttons (left side) -->
+  <rect x="2" y="105" width="10" height="22" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+  <rect x="2" y="132" width="10" height="22" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+        
+  <!-- Power button (right side) -->
+  <rect x="173" y="118" width="10" height="28" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+        
+  <!-- Camera system (S24+ triple camera) -->
+  <rect x="22" y="28" width="85" height="85" rx="12" ry="12" 
+        fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        
+  <!-- Individual camera lenses (3 cameras) -->
+  <circle cx="45" cy="51" r="16" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="85" cy="51" r="16" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="65" cy="90" r="16" fill="#000" stroke="#333" stroke-width="2"/>
+  
+  <!-- Flash and sensors -->
+  <circle cx="80" cy="78" r="5" fill="#ffd700" stroke="#ffed4e" stroke-width="1"/>
+  <rect x="50" y="75" width="6" height="5" rx="2" fill="#4a5568"/>
+        
+  <!-- USB-C port (bottom center) -->
+  <rect x="80" y="390" width="25" height="10" rx="5" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- Speaker grilles -->
+  <g fill="#1a1a1a" stroke="#333" stroke-width="0.5">
+    <rect x="45" y="385" width="2.5" height="18" rx="1.2"/>
+    <rect x="49" y="385" width="2.5" height="18" rx="1.2"/>
+    <rect x="53" y="385" width="2.5" height="18" rx="1.2"/>
+    <rect x="115" y="385" width="2.5" height="18" rx="1.2"/>
+    <rect x="119" y="385" width="2.5" height="18" rx="1.2"/>
+    <rect x="123" y="385" width="2.5" height="18" rx="1.2"/>
+    <rect x="127" y="385" width="2.5" height="18" rx="1.2"/>
+  </g>
+</svg>

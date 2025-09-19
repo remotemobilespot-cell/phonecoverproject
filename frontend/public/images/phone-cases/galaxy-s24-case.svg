@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="galaxy-s24" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 288 580">
+  <!-- Phone Case Template for Galaxy S24 -->
+  
+  <!-- Main case outline -->
+  <rect x="31" y="63" width="226" height="478" 
+        rx="36.75" ry="36.75" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  
+  <!-- Camera module area -->
+  <rect x="45" y="77" 
+        width="90" height="70" 
+        rx="15" ry="15" 
+        fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  
+  <!-- Individual camera lenses and components -->
+  <circle cx="70" cy="95" r="16" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  <circle cx="70" cy="125" r="12" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  <circle cx="105" cy="95" r="14" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  <circle cx="105" cy="125" r="4" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+</svg>

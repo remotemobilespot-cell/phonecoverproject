@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="iphone-13" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 288 570">
+  <!-- Phone Case Template for iPhone 13 -->
+  
+  <!-- Main case outline -->
+  <rect x="31" y="63" width="226" height="468" 
+        rx="36.75" ry="36.75" fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  
+  <!-- Camera module area -->
+  <rect x="45" y="77" 
+        width="77" height="85" 
+        rx="21" ry="21" 
+        fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  
+  <!-- Individual camera lenses and components -->
+  <circle cx="67" cy="99" r="18" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  <circle cx="67" cy="141" r="18" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  <circle cx="103" cy="100" r="5" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+  <circle cx="101" cy="120" r="8" 
+            fill="none" stroke="#000" stroke-miterlimit="10" stroke-width="2"/>
+</svg>

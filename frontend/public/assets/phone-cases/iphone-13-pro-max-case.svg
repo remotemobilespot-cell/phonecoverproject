@@ -1,0 +1,21 @@
+<svg width="300" height="650" xmlns="http://www.w3.org/2000/svg">
+  <rect width="300" height="650" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" rx="25"/>
+  <rect width="280" height="630" x="10" y="10" fill="#ffffff" stroke="#6c757d" stroke-width="1" rx="20"/>
+  
+  <!-- Phone Case Design Area -->
+  <rect width="260" height="450" x="20" y="100" fill="#e9ecef" stroke="#adb5bd" stroke-width="1" rx="10"/>
+  
+  <!-- Sample Photo Placeholder -->
+  <rect width="240" height="370" x="30" y="140" fill="#ffffff" stroke="#ced4da" stroke-width="1" rx="5"/>
+  <text x="150" y="325" text-anchor="middle" font-family="Arial" font-size="14" fill="#6c757d">Your Photo Here</text>
+  <text x="150" y="345" text-anchor="middle" font-family="Arial" font-size="12" fill="#868e96">Custom Print</text>
+  
+  <!-- Phone Model Label -->
+  <text x="150" y="40" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#495057">iPhone 13 Pro Max Case</text>
+  
+  <!-- Camera Cutout -->
+  <rect width="60" height="60" x="30" y="30" fill="#000000" rx="20"/>
+  
+  <!-- Port Cutouts -->
+  <rect width="80" height="8" x="110" y="636" fill="#000000" rx="4"/>
+</svg>

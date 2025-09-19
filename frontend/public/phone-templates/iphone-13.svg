@@ -1,0 +1,62 @@
+<svg width="180" height="385" viewBox="0 0 180 385" xmlns="http://www.w3.org/2000/svg">
+  <!-- iPhone 13 Case Template -->
+  <defs>
+    <linearGradient id="iphone13" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff6b6b" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#4ecdc4" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#45b7d1" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Case outline - aluminum frame -->
+  <rect x="8" y="8" width="164" height="369" rx="19" ry="19" 
+        fill="none" stroke="url(#iphone13)" stroke-width="3"/>
+        
+  <!-- Volume buttons (left side) -->
+  <rect x="2" y="97" width="10" height="17" rx="5" 
+        fill="#e0e0e0" stroke="#c0c0c0" stroke-width="1"/>
+  <rect x="2" y="118" width="10" height="34" rx="5" 
+        fill="#e0e0e0" stroke="#c0c0c0" stroke-width="1"/>
+        
+  <!-- Power button (right side) -->
+  <rect x="168" y="108" width="10" height="25" rx="5" 
+        fill="#e0e0e0" stroke="#c0c0c0" stroke-width="1"/>
+        
+  <!-- Ring/Silent switch (left side top) -->
+  <rect x="2" y="76" width="10" height="15" rx="5" 
+        fill="#e0e0e0" stroke="#c0c0c0" stroke-width="1"/>
+        
+  <!-- Smaller notch area -->
+  <rect x="60" y="8" width="60" height="14" rx="7" ry="7" 
+        fill="#000" stroke="#333" stroke-width="1"/>
+        
+  <!-- Dual camera system -->
+  <rect x="17" y="22" width="80" height="80" rx="11" ry="11" 
+        fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        
+  <!-- Two main cameras -->
+  <circle cx="42" cy="47" r="15" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="72" cy="77" r="15" fill="#000" stroke="#333" stroke-width="2"/>
+  
+  <!-- Flash -->
+  <circle cx="80" cy="38" r="5.5" fill="#ffd700" stroke="#ffed4e" stroke-width="1"/>
+  
+  <!-- Microphone -->
+  <rect x="52" y="87" width="8" height="5" rx="2.5" fill="#2a2a2a"/>
+        
+  <!-- Lightning port (bottom center) -->
+  <rect x="75" y="360" width="25" height="9" rx="4.5" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- Speaker grilles -->
+  <g fill="#1a1a1a" stroke="#333" stroke-width="0.5">
+    <rect x="38" y="355" width="3" height="17" rx="1.5"/>
+    <rect x="43" y="355" width="3" height="17" rx="1.5"/>
+    <rect x="48" y="355" width="3" height="17" rx="1.5"/>
+    <rect x="53" y="355" width="3" height="17" rx="1.5"/>
+    <rect x="113" y="355" width="3" height="17" rx="1.5"/>
+    <rect x="118" y="355" width="3" height="17" rx="1.5"/>
+    <rect x="123" y="355" width="3" height="17" rx="1.5"/>
+    <rect x="128" y="355" width="3" height="17" rx="1.5"/>
+  </g>
+</svg>

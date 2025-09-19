@@ -1,0 +1,66 @@
+<svg width="190" height="405" viewBox="0 0 190 405" xmlns="http://www.w3.org/2000/svg">
+  <!-- iPhone 14 Pro Case Template -->
+  <defs>
+    <linearGradient id="iphone14pro" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4a90e2" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#7b68ee" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#50c878" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Case outline - stainless steel frame -->
+  <rect x="8" y="8" width="174" height="389" rx="21" ry="21" 
+        fill="none" stroke="url(#iphone14pro)" stroke-width="3"/>
+        
+  <!-- Volume buttons (left side) -->
+  <rect x="2" y="105" width="10" height="18" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+  <rect x="2" y="128" width="10" height="38" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+        
+  <!-- Power button (right side) -->
+  <rect x="178" y="116" width="10" height="27" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+        
+  <!-- Ring/Silent switch (left side top) -->
+  <rect x="2" y="83" width="10" height="16" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+        
+  <!-- Dynamic Island area -->
+  <rect x="60" y="15" width="70" height="12" rx="6" ry="6" 
+        fill="#000" stroke="#333" stroke-width="1"/>
+        
+  <!-- ProRAW triple camera system with LiDAR -->
+  <rect x="20" y="26" width="98" height="98" rx="15" ry="15" 
+        fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        
+  <!-- Three main cameras -->
+  <circle cx="50" cy="56" r="17" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="50" cy="94" r="17" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="88" cy="75" r="17" fill="#000" stroke="#333" stroke-width="2"/>
+  
+  <!-- LiDAR scanner -->
+  <circle cx="88" cy="41" r="6.5" fill="#1a1a1a" stroke="#666" stroke-width="1"/>
+  
+  <!-- Flash -->
+  <circle cx="96" cy="109" r="6.5" fill="#ffd700" stroke="#ffed4e" stroke-width="1"/>
+  
+  <!-- Microphone -->
+  <rect x="78" y="105" width="10" height="6" rx="3" fill="#2a2a2a"/>
+        
+  <!-- Lightning port (bottom center) -->
+  <rect x="80" y="380" width="27" height="10" rx="5" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- Speaker grilles -->
+  <g fill="#1a1a1a" stroke="#333" stroke-width="0.5">
+    <rect x="42" y="375" width="3" height="18" rx="1.5"/>
+    <rect x="47" y="375" width="3" height="18" rx="1.5"/>
+    <rect x="52" y="375" width="3" height="18" rx="1.5"/>
+    <rect x="57" y="375" width="3" height="18" rx="1.5"/>
+    <rect x="120" y="375" width="3" height="18" rx="1.5"/>
+    <rect x="125" y="375" width="3" height="18" rx="1.5"/>
+    <rect x="130" y="375" width="3" height="18" rx="1.5"/>
+    <rect x="135" y="375" width="3" height="18" rx="1.5"/>
+  </g>
+</svg>

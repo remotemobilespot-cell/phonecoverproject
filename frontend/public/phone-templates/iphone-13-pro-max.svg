@@ -1,0 +1,64 @@
+<svg width="210" height="440" viewBox="0 0 210 440" xmlns="http://www.w3.org/2000/svg">
+  <!-- iPhone 13 Pro Max Case Template -->
+  <defs>
+    <linearGradient id="iphone13promax" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4a90e2" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#7b68ee" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#50c878" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Case outline - stainless steel frame -->
+  <rect x="8" y="8" width="194" height="424" rx="24" ry="24" 
+        fill="none" stroke="url(#iphone13promax)" stroke-width="3"/>
+        
+  <!-- Volume buttons (left side) -->
+  <rect x="2" y="115" width="10" height="20" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+  <rect x="2" y="140" width="10" height="45" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+        
+  <!-- Power button (right side) -->
+  <rect x="198" y="127" width="10" height="30" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+        
+  <!-- Ring/Silent switch (left side top) -->
+  <rect x="2" y="90" width="10" height="18" rx="5" 
+        fill="#c0c0c0" stroke="#a0a0a0" stroke-width="1"/>
+        
+  <!-- ProRAW triple camera system with LiDAR -->
+  <rect x="25" y="30" width="110" height="110" rx="18" ry="18" 
+        fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        
+  <!-- Three main cameras -->
+  <circle cx="60" cy="65" r="20" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="60" cy="105" r="20" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="100" cy="85" r="20" fill="#000" stroke="#333" stroke-width="2"/>
+  
+  <!-- LiDAR scanner -->
+  <circle cx="100" cy="45" r="8" fill="#1a1a1a" stroke="#666" stroke-width="1"/>
+  
+  <!-- Flash -->
+  <circle cx="110" cy="125" r="8" fill="#ffd700" stroke="#ffed4e" stroke-width="1"/>
+  
+  <!-- Microphone -->
+  <rect x="90" y="120" width="12" height="8" rx="4" fill="#2a2a2a"/>
+        
+  <!-- Lightning port (bottom center) -->
+  <rect x="90" y="415" width="30" height="12" rx="6" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- Speaker grilles -->
+  <g fill="#1a1a1a" stroke="#333" stroke-width="0.5">
+    <rect x="50" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="55" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="60" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="65" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="70" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="135" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="140" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="145" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="150" y="410" width="3" height="20" rx="1.5"/>
+    <rect x="155" y="410" width="3" height="20" rx="1.5"/>
+  </g>
+</svg>

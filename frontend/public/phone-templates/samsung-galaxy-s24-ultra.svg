@@ -1,0 +1,59 @@
+<!-- Samsung Galaxy S24 Ultra Case Template SVG -->
+<svg width="200" height="450" viewBox="0 0 200 450" xmlns="http://www.w3.org/2000/svg">
+  <!-- Samsung Galaxy S24 Ultra Case Template -->
+  <defs>
+    <linearGradient id="samsungGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2d3748" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#4a5568" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1a202c" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Case outline - premium aluminum frame -->
+  <rect x="8" y="8" width="184" height="434" rx="22" ry="22" 
+        fill="none" stroke="url(#samsungGrad)" stroke-width="3"/>
+        
+  <!-- Volume buttons (left side) -->
+  <rect x="2" y="110" width="10" height="25" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+  <rect x="2" y="140" width="10" height="25" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+        
+  <!-- Power button (right side) -->
+  <rect x="188" y="125" width="10" height="30" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+        
+  <!-- Camera system (S24 Ultra quad camera system) -->
+  <rect x="25" y="30" width="95" height="95" rx="15" ry="15" 
+        fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        
+  <!-- Individual camera lenses (4 cameras) -->
+  <circle cx="50" cy="55" r="18" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="95" cy="55" r="18" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="50" cy="100" r="18" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="95" cy="100" r="18" fill="#000" stroke="#333" stroke-width="2"/>
+  
+  <!-- Flash and sensors -->
+  <circle cx="72" cy="40" r="6" fill="#ffd700" stroke="#ffed4e" stroke-width="1"/>
+  <rect x="82" y="37" width="8" height="6" rx="3" fill="#4a5568"/>
+        
+  <!-- S Pen slot (bottom left) -->
+  <rect x="15" y="415" width="30" height="4" rx="2" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- USB-C port (bottom center) -->
+  <rect x="85" y="425" width="30" height="12" rx="6" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- Speaker grilles -->
+  <g fill="#1a1a1a" stroke="#333" stroke-width="0.5">
+    <rect x="50" y="420" width="3" height="20" rx="1.5"/>
+    <rect x="55" y="420" width="3" height="20" rx="1.5"/>
+    <rect x="60" y="420" width="3" height="20" rx="1.5"/>
+    <rect x="130" y="420" width="3" height="20" rx="1.5"/>
+    <rect x="135" y="420" width="3" height="20" rx="1.5"/>
+    <rect x="140" y="420" width="3" height="20" rx="1.5"/>
+    <rect x="145" y="420" width="3" height="20" rx="1.5"/>
+    <rect x="150" y="420" width="3" height="20" rx="1.5"/>
+  </g>
+</svg>

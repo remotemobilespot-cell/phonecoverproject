@@ -1,0 +1,59 @@
+<svg width="200" height="430" viewBox="0 0 200 430" xmlns="http://www.w3.org/2000/svg">
+  <!-- iPhone 15 Pro Max Case Template -->
+  <defs>
+    <linearGradient id="titaniumGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2d3748" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#4a5568" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#1a202c" stop-opacity="0.8"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Case outline - titanium finish -->
+  <rect x="8" y="8" width="184" height="414" rx="28" ry="28" 
+        fill="none" stroke="url(#titaniumGrad)" stroke-width="4"/>
+        
+  <!-- Action Button (left side, new in iPhone 15 Pro) -->
+  <rect x="2" y="85" width="10" height="18" rx="5" 
+        fill="#8e9aaf" stroke="#6c757d" stroke-width="1"/>
+        
+  <!-- Volume buttons (left side) -->
+  <rect x="2" y="110" width="10" height="20" rx="5" 
+        fill="#8e9aaf" stroke="#6c757d" stroke-width="1"/>
+  <rect x="2" y="135" width="10" height="20" rx="5" 
+        fill="#8e9aaf" stroke="#6c757d" stroke-width="1"/>
+        
+  <!-- Power button (right side) -->
+  <rect x="188" y="120" width="10" height="25" rx="5" 
+        fill="#8e9aaf" stroke="#6c757d" stroke-width="1"/>
+        
+  <!-- Camera system (Pro Max triple camera + LiDAR) -->
+  <rect x="20" y="25" width="85" height="85" rx="20" ry="20" 
+        fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        
+  <!-- Individual camera lenses -->
+  <circle cx="45" cy="50" r="18" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="80" cy="50" r="18" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="45" cy="85" r="18" fill="#000" stroke="#333" stroke-width="2"/>
+  
+  <!-- LiDAR sensor -->
+  <circle cx="80" cy="85" r="8" fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+  
+  <!-- Flash -->
+  <circle cx="60" cy="35" r="6" fill="#ffd700" stroke="#ffed4e" stroke-width="1"/>
+        
+  <!-- USB-C port (bottom) -->
+  <rect x="85" y="405" width="30" height="12" rx="6" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- Speaker grilles -->
+  <g fill="#1a1a1a" stroke="#333" stroke-width="0.5">
+    <rect x="45" y="400" width="3" height="20" rx="1.5"/>
+    <rect x="50" y="400" width="3" height="20" rx="1.5"/>
+    <rect x="55" y="400" width="3" height="20" rx="1.5"/>
+    <rect x="125" y="400" width="3" height="20" rx="1.5"/>
+    <rect x="130" y="400" width="3" height="20" rx="1.5"/>
+    <rect x="135" y="400" width="3" height="20" rx="1.5"/>
+    <rect x="140" y="400" width="3" height="20" rx="1.5"/>
+    <rect x="145" y="400" width="3" height="20" rx="1.5"/>
+  </g>
+</svg>

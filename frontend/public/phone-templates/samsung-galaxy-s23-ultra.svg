@@ -1,0 +1,58 @@
+<svg width="198" height="445" viewBox="0 0 198 445" xmlns="http://www.w3.org/2000/svg">
+  <!-- Samsung Galaxy S23 Ultra Case Template -->
+  <defs>
+    <linearGradient id="s23ultraGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2d3748" stop-opacity="0.4"/>
+      <stop offset="50%" stop-color="#4a5568" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#1a202c" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Case outline - premium aluminum frame -->
+  <rect x="8" y="8" width="182" height="429" rx="21" ry="21" 
+        fill="none" stroke="url(#s23ultraGrad)" stroke-width="3"/>
+        
+  <!-- Volume buttons (left side) -->
+  <rect x="2" y="108" width="10" height="24" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+  <rect x="2" y="137" width="10" height="24" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+        
+  <!-- Power button (right side) -->
+  <rect x="186" y="122" width="10" height="29" rx="5" 
+        fill="#4a5568" stroke="#2d3748" stroke-width="1"/>
+        
+  <!-- Camera system (S23 Ultra quad camera system) -->
+  <rect x="24" y="28" width="92" height="92" rx="14" ry="14" 
+        fill="#1a1a1a" stroke="#333" stroke-width="2"/>
+        
+  <!-- Individual camera lenses (4 cameras) -->
+  <circle cx="48" cy="52" r="17" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="92" cy="52" r="17" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="48" cy="96" r="17" fill="#000" stroke="#333" stroke-width="2"/>
+  <circle cx="92" cy="96" r="17" fill="#000" stroke="#333" stroke-width="2"/>
+  
+  <!-- Flash and sensors -->
+  <circle cx="70" cy="38" r="5.5" fill="#ffd700" stroke="#ffed4e" stroke-width="1"/>
+  <rect x="80" y="35" width="7" height="6" rx="3" fill="#4a5568"/>
+        
+  <!-- S Pen slot (bottom left) -->
+  <rect x="15" y="410" width="28" height="4" rx="2" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- USB-C port (bottom center) -->
+  <rect x="83" y="420" width="28" height="12" rx="6" 
+        fill="#1a1a1a" stroke="#333" stroke-width="1"/>
+        
+  <!-- Speaker grilles -->
+  <g fill="#1a1a1a" stroke="#333" stroke-width="0.5">
+    <rect x="48" y="415" width="3" height="20" rx="1.5"/>
+    <rect x="53" y="415" width="3" height="20" rx="1.5"/>
+    <rect x="58" y="415" width="3" height="20" rx="1.5"/>
+    <rect x="125" y="415" width="3" height="20" rx="1.5"/>
+    <rect x="130" y="415" width="3" height="20" rx="1.5"/>
+    <rect x="135" y="415" width="3" height="20" rx="1.5"/>
+    <rect x="140" y="415" width="3" height="20" rx="1.5"/>
+    <rect x="145" y="415" width="3" height="20" rx="1.5"/>
+  </g>
+</svg>
