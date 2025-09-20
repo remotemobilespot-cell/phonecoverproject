@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MapPin, Phone, Mail, Clock, MessageSquare, Zap } from 'lucide-react';
 import { toast } from 'sonner';
+import { apiClient } from '@/lib/apiClient';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -26,26 +27,9 @@ export default function Contact() {
 
     try {
       console.log('Submitting form data:', formData);
-      console.log('Making request to:', '/api/contact');
       
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
-
-      const result = await response.json();
+      const result = await apiClient.post('/api/contact', formData);
+      
       console.log('Success result:', result);
       toast.success('Message sent successfully! We\'ll get back to you within 24 hours.');
       setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
