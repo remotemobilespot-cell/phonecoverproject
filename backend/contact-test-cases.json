@@ -1,0 +1,55 @@
+[
+  {
+    "description": "Valid request with all fields",
+    "json": {
+      "name": "Alice Smith",
+      "email": "alice@example.com",
+      "phone": "555-987-6543",
+      "subject": "Support Request",
+      "message": "I need help with my order"
+    }
+  },
+  {
+    "description": "Valid request without phone (optional field)",
+    "json": {
+      "name": "Bob Johnson",
+      "email": "bob@example.com",
+      "subject": "General Question",
+      "message": "What are your business hours?"
+    }
+  },
+  {
+    "description": "Invalid request - missing name (should return 400)",
+    "json": {
+      "email": "test@example.com",
+      "subject": "Test",
+      "message": "This should fail validation"
+    }
+  },
+  {
+    "description": "Invalid request - missing email (should return 400)",
+    "json": {
+      "name": "Test User",
+      "subject": "Test",
+      "message": "This should fail validation"
+    }
+  },
+  {
+    "description": "Invalid request - empty subject (should return 400)",
+    "json": {
+      "name": "Test User",
+      "email": "test@example.com",
+      "subject": "",
+      "message": "This should fail validation"
+    }
+  },
+  {
+    "description": "Invalid request - empty message (should return 400)",
+    "json": {
+      "name": "Test User",
+      "email": "test@example.com",
+      "subject": "Test Subject",
+      "message": ""
+    }
+  }
+]

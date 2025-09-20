@@ -1,0 +1,41 @@
+{
+  "testCases": [
+    {
+      "name": "Valid Contact Form",
+      "data": {
+        "name": "Alice Smith",
+        "email": "alice.smith@example.com",
+        "phone": "555-987-6543",
+        "subject": "Support Request",
+        "message": "I need help with my recent order. Can someone contact me please?"
+      }
+    },
+    {
+      "name": "Without Phone (Optional Field)",
+      "data": {
+        "name": "Bob Johnson",
+        "email": "bob.johnson@example.com",
+        "subject": "General Question",
+        "message": "What are your business hours?"
+      }
+    },
+    {
+      "name": "Missing Required Field (Should Fail)",
+      "data": {
+        "name": "Test User",
+        "email": "test@example.com",
+        "subject": ""
+      }
+    },
+    {
+      "name": "Long Message",
+      "data": {
+        "name": "Sarah Williams",
+        "email": "sarah.w@example.com",
+        "phone": "555-456-7890",
+        "subject": "Detailed Inquiry",
+        "message": "I am looking for a custom phone case with a specific design. The design includes multiple colors and I want to make sure the quality will be good. Can you tell me about the printing process, materials used, and estimated delivery time? Also, do you offer bulk discounts for orders over 10 pieces? I would also like to know about your return policy in case the product doesn't meet expectations."
+      }
+    }
+  ]
+}
