@@ -9,15 +9,20 @@ const supabaseService = createClient(process.env.SUPABASE_URL, process.env.SUPAB
 // POST /api/contact - Submit contact form
 router.post('/', async (req, res) => {
   try {
+    console.log('Contact form submission received:', req.body);
     const { name, email, phone, subject, message } = req.body;
     
     // Validate required fields
     if (!name || !email || !subject || !message) {
+      console.log('Validation failed - missing required fields');
       return res.status(400).json({ 
-        error: 'Name, email, subject, and message are required.' 
+        error: 'Name, email, subject, and message are required.',
+        success: false
       });
     }
 
+    console.log('Attempting to insert into contact_submissions table...');
+    
     // Insert contact form data into Supabase
     const { data, error } = await supabaseService
       .from('contact_submissions')
@@ -36,10 +41,16 @@ router.post('/', async (req, res) => {
       .single();
 
     if (error) {
-      console.error('Supabase error:', error);
-      return res.status(500).json({ error: 'Failed to submit contact form.' });
+      console.error('Supabase insertion error:', error);
+      return res.status(500).json({ 
+        error: 'Failed to submit contact form. Database error.',
+        details: error.message,
+        success: false
+      });
     }
 
+    console.log('Contact form submitted successfully:', data);
+    
     res.json({ 
       success: true, 
       message: 'Contact form submitted successfully!',
@@ -48,7 +59,11 @@ router.post('/', async (req, res) => {
 
   } catch (error) {
     console.error('Contact form error:', error);
-    res.status(500).json({ error: 'Internal server error.' });
+    res.status(500).json({ 
+      error: 'Internal server error.',
+      details: error.message,
+      success: false
+    });
   }
 });
 
