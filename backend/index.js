@@ -19,26 +19,9 @@ import paymentsRouter from './src/routes/payments.js';
 
 const app = express();
 
-// Configure CORS with specific allowed origins
-const allowedOrigins = [
-  process.env.FRONTEND_URL_LOCAL,
-  process.env.FRONTEND_URL_NETWORK,
-  process.env.FRONTEND_URL_PROD,
-  'https://phonecoverproject-fq86vmyyd-remotemobilespot-8176s-projects.vercel.app'
-];
-
+// Configure CORS - Allow all origins for now (debugging)
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: true,
   credentials: true
 }));
 
@@ -47,6 +30,21 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('Custom Phone Case Print Backend is running.');
+});
+
+// Test endpoint
+app.get('/api/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Backend is working!',
+    timestamp: new Date().toISOString(),
+    env: {
+      hasSupabaseUrl: !!process.env.SUPABASE_URL,
+      hasSupabaseKey: !!process.env.SUPABASE_KEY,
+      hasServiceRoleKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      nodeEnv: process.env.NODE_ENV
+    }
+  });
 });
 
 app.use('/api/products', productsRouter);
