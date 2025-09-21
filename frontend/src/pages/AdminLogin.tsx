@@ -180,8 +180,8 @@ export default function AdminLogin() {
               <div className="text-sm">
                 <p className="font-medium text-yellow-800">Demo Credentials</p>
                 <p className="text-yellow-700 mt-1">
-                  <strong>Email:</strong> admin@printphonecover.com<br/>
-                  <strong>Password:</strong> Admin@2024!PrintCover
+                  <strong>Email:</strong> <br/>
+                <strong>Password:</strong>
                 </p>
                 <p className="text-yellow-600 text-xs mt-2">
                   In production, use environment variables for security.

@@ -81,6 +81,7 @@ export default function PrintNow() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [user, setUser] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
+  const [nearbyLocations, setNearbyLocations] = useState<any[]>([]);
 
   const navigate = useNavigate();
   const totalSteps = 5;
@@ -127,8 +128,27 @@ export default function PrintNow() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => setUserLocation(null)
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert("Location access denied by user.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              alert("The request to get user location timed out.");
+              break;
+            default:
+              alert("An unknown error occurred.");
+              break;
+          }
+          setUserLocation(null);
+        },
+        { timeout: 10000, maximumAge: 60000 }
       );
+    } else {
+      alert("Geolocation is not supported by this browser.");
     }
   }, []);
 
@@ -746,6 +766,52 @@ export default function PrintNow() {
       console.error('Error placing order:', err);
       alert('Error placing order: ' + (err.message || 'Unknown error occurred'));
       throw err; // Re-throw to be handled by payment component
+    }
+  };
+
+  const fetchNearbyLocations = async (latitude: number, longitude: number) => {
+    try {
+      const response = await fetch(`/api/locations/nearby?lat=${latitude}&lng=${longitude}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch nearby locations');
+      }
+      const data = await response.json();
+      setNearbyLocations(data);
+    } catch (error) {
+      console.error('Error fetching nearby locations:', error);
+      alert('Unable to fetch nearby locations. Please try again later.');
+    }
+  };
+
+  const handleUseMyLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude, longitude } = pos.coords;
+          setUserLocation({ lat: latitude, lng: longitude });
+          fetchNearbyLocations(latitude, longitude);
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert("Location access denied by user.");
+              break;
+            case error.POSITION_UNAVAILABLE:
+              alert("Location information is unavailable.");
+              break;
+            case error.TIMEOUT:
+              alert("The request to get user location timed out.");
+              break;
+            default:
+              alert("An unknown error occurred.");
+              break;
+          }
+          setUserLocation(null);
+        },
+        { timeout: 10000, maximumAge: 60000 }
+      );
+    } else {
+      alert("Geolocation is not supported by this browser.");
     }
   };
 

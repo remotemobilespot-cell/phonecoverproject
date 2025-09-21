@@ -96,45 +96,97 @@ export default function FindMachine() {
   };
 
   const handleUseLocation = async () => {
+    console.log('🔍 Use My Location clicked');
+    console.log('🌐 Geolocation supported:', !!navigator.geolocation);
+    console.log('🔒 Current URL:', window.location.href);
+    console.log('🔒 Is HTTPS:', window.location.protocol === 'https:');
+    console.log('🏠 Is localhost:', window.location.hostname === 'localhost');
+    
     setLoading(true);
     try {
-      // Use IP-based location instead of GPS
-      const response = await fetch('http://ip-api.com/json/');
-      const data = await response.json();
-      
-      if (data.status === 'success') {
-        const userLat = data.lat;
-        const userLng = data.lon;
-        
-        // Calculate distances and sort by proximity
-        const locationsWithDistance = locations.map(location => {
-          if (location.latitude && location.longitude) {
-            const distance = Math.sqrt(
-              Math.pow(userLat - location.latitude, 2) + 
-              Math.pow(userLng - location.longitude, 2)
-            );
-            return { ...location, distance };
+      if (navigator.geolocation) {
+        console.log('📍 Requesting location permission...');
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            console.log('✅ Location permission granted!');
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
+            console.log(`📍 User location: ${userLat}, ${userLng}`);
+
+            // Calculate distances using Haversine formula
+            const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
+            const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+              const R = 6371; // Earth's radius in km
+              const dLat = toRadians(lat2 - lat1);
+              const dLon = toRadians(lon2 - lon1);
+              const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRadians(lat1)) *
+                  Math.cos(toRadians(lat2)) *
+                  Math.sin(dLon / 2) *
+                  Math.sin(dLon / 2);
+              const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+              return R * c;
+            };
+
+            const locationsWithDistance = locations.map((location) => {
+              if (location.latitude && location.longitude) {
+                const distance = haversineDistance(
+                  userLat,
+                  userLng,
+                  location.latitude,
+                  location.longitude
+                );
+                return { ...location, distance };
+              }
+              return { ...location, distance: Infinity };
+            }).sort((a, b) => a.distance - b.distance);
+
+            setFilteredLocations(locationsWithDistance);
+            setLoading(false);
+          },
+          (error) => {
+            console.error('❌ Geolocation error:', error);
+            console.log('Error code:', error.code);
+            console.log('Error message:', error.message);
+            
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                console.log('🚫 Permission denied by user');
+                alert("Location access denied. To enable location access:\n\n1. Click the location/lock icon in your browser's address bar\n2. Select 'Allow' for location access\n3. Refresh the page and try again\n\nOr use the search bar to find locations manually.");
+                break;
+              case error.POSITION_UNAVAILABLE:
+                console.log('📍 Position unavailable');
+                alert("Location information is unavailable. Please use the search bar to find locations manually.");
+                break;
+              case error.TIMEOUT:
+                console.log('⏰ Request timeout');
+                alert("The request to get your location timed out. Please use the search bar to find locations manually.");
+                break;
+              default:
+                console.log('❓ Unknown error');
+                alert("An unknown error occurred. Please use the search bar to find locations manually.");
+                break;
+            }
+            setFilteredLocations(locations);
+            setLoading(false);
+          },
+          { 
+            enableHighAccuracy: true,
+            timeout: 10000, 
+            maximumAge: 60000 
           }
-          return { ...location, distance: Infinity };
-        }).sort((a, b) => a.distance - b.distance);
-        
-        setFilteredLocations(locationsWithDistance);
-        
-        // Show user's detected location
-        console.log(`Detected location: ${data.city}, ${data.regionName}, ${data.country}`);
-        
+        );
       } else {
-        throw new Error('Failed to detect location from IP');
+        console.log('❌ Geolocation not supported');
+        alert("Geolocation is not supported by this browser. Please use the search bar to find locations manually.");
+        setFilteredLocations(locations);
+        setLoading(false);
       }
     } catch (error) {
-      console.error('IP location detection failed:', error);
-      
-      // Fallback: Show all locations sorted by name
-      const sortedLocations = [...locations].sort((a, b) => a.name.localeCompare(b.name));
-      setFilteredLocations(sortedLocations);
-      
-      alert('Unable to detect your location automatically. Showing all locations instead.');
-    } finally {
+      console.error("Error detecting location:", error);
+      alert("Unable to detect your location. Please use the search bar to find locations manually.");
+      setFilteredLocations(locations);
       setLoading(false);
     }
   };

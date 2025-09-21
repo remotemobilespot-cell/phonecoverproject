@@ -203,6 +203,47 @@ router.get('/search/:zipCode', async (req, res) => {
   }
 });
 
+// GET /api/locations/nearby - Get nearby store locations
+router.get('/nearby', async (req, res) => {
+  const { lat, lng, radius = 10 } = req.query; // Default radius is 10 km
+
+  if (!lat || !lng) {
+    return res.status(400).json({ error: 'Latitude and longitude are required' });
+  }
+
+  try {
+    const { data, error } = await supabase.rpc('get_nearby_locations', {
+      user_lat: parseFloat(lat),
+      user_lng: parseFloat(lng),
+      search_radius: parseFloat(radius)
+    });
+
+    if (error) {
+      console.error('Error fetching nearby locations:', error);
+      return res.status(500).json({ 
+        error: 'Failed to fetch nearby locations',
+        details: error.message 
+      });
+    }
+
+    // Transform data to match frontend expectations
+    const locations = data?.map(transformLocation) || [];
+
+    res.json({
+      success: true,
+      data: locations,
+      count: locations.length
+    });
+
+  } catch (error) {
+    console.error('Error in nearby locations API:', error);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: error.message 
+    });
+  }
+});
+
 // Health check endpoint
 router.get('/health', async (req, res) => {
   try {
