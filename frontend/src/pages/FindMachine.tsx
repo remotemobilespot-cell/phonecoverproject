@@ -5,6 +5,7 @@ import RealMap from '@/components/maps/RealMap';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { MapPin, Phone, Clock, Navigation, Search, Locate, List, Map as MapIcon, Loader, RefreshCw } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 
@@ -337,57 +338,84 @@ export default function FindMachine() {
         {viewMode === 'list' ? (
           // List View
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {filteredLocations.map((location) => (
-              <Card key={location.id} className="hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold mb-4 text-blue-600">{location.name}</h3>
-                  
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-start text-gray-600">
-                      <MapPin className="h-5 w-5 mt-1 mr-3 flex-shrink-0 text-blue-600" />
-                      <div>
-                        <p>{location.address}</p>
-                        <p>{location.city} {location.state} {location.zipCode}</p>
-                      </div>
+            {filteredLocations.map((location) => {
+              const isComingSoon = location.name.toLowerCase().includes('coming soon') || 
+                                   location.hours.toLowerCase().includes('coming soon');
+              
+              return (
+                <Card key={location.id} className={`transition-shadow ${
+                  isComingSoon 
+                    ? 'opacity-75 border-orange-200 bg-orange-50' 
+                    : 'hover:shadow-lg'
+                }`}>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <h3 className={`text-xl font-semibold ${
+                        isComingSoon ? 'text-orange-600' : 'text-blue-600'
+                      }`}>
+                        {location.name}
+                      </h3>
+                      {isComingSoon && (
+                        <Badge variant="outline" className="bg-orange-100 text-orange-700 border-orange-300">
+                          Coming Soon
+                        </Badge>
+                      )}
                     </div>
                     
-                    <div className="flex items-center text-gray-600">
-                      <Phone className="h-5 w-5 mr-3 flex-shrink-0 text-green-600" />
-                      <span>{location.phone}</span>
-                    </div>
-                    
-                    <div className="flex items-start text-gray-600">
-                      <Clock className="h-5 w-5 mt-1 mr-3 flex-shrink-0 text-purple-600" />
-                      <span>{location.hours}</span>
-                    </div>
-
-                    {/* Show coordinates if available */}
-                    {location.latitude && location.longitude && (
-                      <div className="text-xs text-gray-500">
-                        Coordinates: {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-start text-gray-600">
+                        <MapPin className="h-5 w-5 mt-1 mr-3 flex-shrink-0 text-blue-600" />
+                        <div>
+                          <p>{location.address}</p>
+                          <p>{location.city} {location.state} {location.zipCode}</p>
+                        </div>
                       </div>
-                    )}
-                  </div>
+                      
+                      <div className="flex items-center text-gray-600">
+                        <Phone className="h-5 w-5 mr-3 flex-shrink-0 text-green-600" />
+                        <span>{location.phone}</span>
+                      </div>
+                      
+                      <div className="flex items-start text-gray-600">
+                        <Clock className={`h-5 w-5 mt-1 mr-3 flex-shrink-0 ${
+                          isComingSoon ? 'text-orange-600' : 'text-purple-600'
+                        }`} />
+                        <span className={isComingSoon ? 'text-orange-700 font-medium' : ''}>
+                          {location.hours}
+                        </span>
+                      </div>
 
-                  <div className="flex gap-2">
-                    <Button 
-                      className="flex-1"
-                      onClick={() => handleNavigate(location)}
-                    >
-                      <Navigation className="h-4 w-4 mr-2" />
-                      Get Directions
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      onClick={() => setViewMode('map')}
-                    >
-                      <MapIcon className="h-4 w-4 mr-2" />
-                      Show on Map
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                      {/* Show coordinates if available */}
+                      {location.latitude && location.longitude && (
+                        <div className="text-xs text-gray-500">
+                          Coordinates: {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button 
+                        className="flex-1"
+                        onClick={() => handleNavigate(location)}
+                        disabled={isComingSoon}
+                        variant={isComingSoon ? "outline" : "default"}
+                      >
+                        <Navigation className="h-4 w-4 mr-2" />
+                        {isComingSoon ? 'Location Coming Soon' : 'Get Directions'}
+                      </Button>
+                      <Button 
+                        variant="outline"
+                        onClick={() => setViewMode('map')}
+                        disabled={isComingSoon}
+                      >
+                        <MapIcon className="h-4 w-4 mr-2" />
+                        Show on Map
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           // Map View
