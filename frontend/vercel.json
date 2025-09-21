@@ -7,6 +7,12 @@
       "config": { "distDir": "dist" }
     }
   ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
   "redirects": [
     {
       "source": "/api/(.*)",
