@@ -67,6 +67,17 @@ router.get('/health', (req, res) => {
   });
 });
 
+// SendGrid configuration check endpoint
+router.get('/email-config', (req, res) => {
+  const sendGridConfigured = !!process.env.SENDGRID_API_KEY;
+  res.json({
+    success: true,
+    sendGridConfigured: sendGridConfigured,
+    sendGridKeyLength: process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.length : 0,
+    message: sendGridConfigured ? 'SendGrid is configured' : 'SendGrid API key is missing'
+  });
+});
+
 // GET version of test endpoint (easier to test in browser)
 router.get('/test-order', (req, res) => {
   res.json({
