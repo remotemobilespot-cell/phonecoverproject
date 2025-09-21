@@ -54,6 +54,12 @@ const sendOrderNotification = async (orderData) => {
     return true;
   } catch (error) {
     console.error('Failed to send order notification email:', error);
+    
+    // Log detailed error information
+    if (error.response && error.response.body && error.response.body.errors) {
+      console.error('SendGrid error details:', JSON.stringify(error.response.body.errors, null, 2));
+    }
+    
     return false;
   }
 };
