@@ -7,11 +7,19 @@ async function testOrderEmail() {
     caseType: 'Clear',
     quantity: 1,
     amount: 29.99,
-    customerEmail: 'test@example.com'
+    customerEmail: 'test@example.com',
+    customerName: 'Test Customer'
   };
 
   try {
-    const response = await fetch('https://YOUR_RENDER_BACKEND_URL/api/orders', {
+    // Replace with your actual Render backend URL
+    const BACKEND_URL = 'https://printphonecase-backend.onrender.com'; // Update this with your actual URL
+    
+    console.log('Testing order email endpoint...');
+    console.log('Backend URL:', BACKEND_URL);
+    console.log('Test order data:', testOrder);
+    
+    const response = await fetch(`${BACKEND_URL}/api/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,11 +27,14 @@ async function testOrderEmail() {
       body: JSON.stringify(testOrder)
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response status text:', response.statusText);
+    
     const result = await response.json();
-    console.log('Response:', result);
+    console.log('Response body:', result);
     
     if (response.ok) {
-      console.log('✅ Test order sent successfully! Check your email.');
+      console.log('✅ Test order sent successfully! Check your email (r.eshwarkiran@gmail.com).');
     } else {
       console.log('❌ Test failed:', result.error);
     }

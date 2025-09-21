@@ -2,12 +2,61 @@ import express from 'express';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import sgMail from '@sendgrid/mail';
 import { supabase } from '../supabaseClient.js';
 
 // Ensure environment variables are loaded
 dotenv.config();
 
+// Initialize SendGrid
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  console.log('SendGrid configured successfully');
+} else {
+  console.warn('SENDGRID_API_KEY not found - email notifications will not work');
+}
+
 const router = express.Router();
+
+// Function to send order notification email
+const sendOrderNotification = async (orderData) => {
+  if (!process.env.SENDGRID_API_KEY) {
+    console.log('SendGrid not configured - skipping email notification');
+    return false;
+  }
+
+  try {
+    const emailContent = {
+      to: 'r.eshwarkiran@gmail.com', // Your notification email
+      from: 'r.eshwarkiran@gmail.com', // Must be verified sender
+      subject: `New Order Received - Order #${orderData.id}`,
+      html: `
+        <h2>New Order Received!</h2>
+        <p><strong>Order ID:</strong> ${orderData.id}</p>
+        <p><strong>Customer:</strong> ${orderData.contact_name}</p>
+        <p><strong>Email:</strong> ${orderData.contact_email}</p>
+        <p><strong>Phone:</strong> ${orderData.contact_phone || 'Not provided'}</p>
+        <p><strong>Phone Model:</strong> ${orderData.phone_model}</p>
+        <p><strong>Case Type:</strong> ${orderData.case_type || 'regular'}</p>
+        <p><strong>Amount:</strong> $${orderData.amount}</p>
+        <p><strong>Fulfillment Method:</strong> ${orderData.fulfillment_method}</p>
+        ${orderData.delivery_address ? `<p><strong>Delivery Address:</strong> ${orderData.delivery_address}</p>` : ''}
+        <p><strong>Order Time:</strong> ${new Date().toLocaleString()}</p>
+        
+        <h3>Order Details:</h3>
+        <p>Design Image: ${orderData.design_image}</p>
+        ${orderData.original_image ? `<p>Original Image: ${orderData.original_image}</p>` : ''}
+      `
+    };
+
+    await sgMail.send(emailContent);
+    console.log('Order notification email sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Failed to send order notification email:', error);
+    return false;
+  }
+};
 
 // Health check endpoint for payments API
 router.get('/health', (req, res) => {
@@ -326,10 +375,19 @@ router.post('/create-order', async (req, res) => {
 
     console.log('Order created successfully:', order.id);
 
+    // Send email notification
+    const emailSent = await sendOrderNotification(order);
+    if (emailSent) {
+      console.log('Email notification sent for order:', order.id);
+    } else {
+      console.log('Email notification failed for order:', order.id);
+    }
+
     res.json({
       success: true,
       order: order,
-      message: 'Order created successfully'
+      message: 'Order created successfully',
+      emailSent: emailSent
     });
 
   } catch (error) {
