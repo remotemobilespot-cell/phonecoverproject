@@ -717,8 +717,12 @@ export default function PrintNow() {
       // Create order via API or direct database insertion
       try {
         console.log('Creating order via API...');
-        // Use environment variable for API URL
-        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+        // Use environment variable for API URL with smart defaults
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
+          (import.meta.env.PROD ? 'https://phonecoverproject-1.onrender.com' : 'http://localhost:3001');
+        
+        console.log('Using API URL:', apiBaseUrl); // Debug log
+        
         const response = await fetch(`${apiBaseUrl}/api/payments/create-order`, {
           method: 'POST',
           headers: {
