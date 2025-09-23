@@ -18,6 +18,8 @@ import contactRouter from './src/routes/contact.js';
 import paymentsRouter from './src/routes/payments.js';
 import blogRouter from './src/routes/blog-test.js';
 
+console.log('✅ All routes imported successfully, including blog router');
+
 const app = express();
 
 // Configure CORS - Allow all origins for now (debugging)
@@ -58,6 +60,8 @@ app.use('/api/locations', locationsRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/blog', blogRouter);
+
+console.log('✅ Blog routes registered at /api/blog');
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
