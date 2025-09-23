@@ -105,102 +105,126 @@ export default function BlogPost() {
       <BlogSEO post={post} />
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Breadcrumb */}
-        <nav className="mb-8">
-          <div className="flex items-center text-sm text-gray-600">
-            <Link to="/" className="hover:text-blue-600">Home</Link>
+        <nav className="mb-6 sm:mb-8">
+          <div className="flex items-center text-xs sm:text-sm text-gray-600 overflow-x-auto">
+            <Link to="/" className="hover:text-blue-600 whitespace-nowrap">Home</Link>
             <span className="mx-2">/</span>
-            <Link to="/blog" className="hover:text-blue-600">Blog</Link>
+            <Link to="/blog" className="hover:text-blue-600 whitespace-nowrap">Blog</Link>
             <span className="mx-2">/</span>
-            <span className="text-gray-900 font-medium line-clamp-1">{post.title}</span>
+            <span className="text-gray-900 font-medium truncate">{post.title}</span>
           </div>
         </nav>
 
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Main Content */}
           <article className="lg:col-span-3">
             {/* Header */}
-            <div className="bg-white rounded-xl shadow-sm p-8 mb-8">
-              <div className="mb-6">
-                <Badge variant="secondary" className="mb-4">
+            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+              <div className="mb-4 sm:mb-6">
+                <Badge variant="secondary" className="mb-3 sm:mb-4">
                   <Tag className="h-3 w-3 mr-1" />
                   {post.category}
                 </Badge>
-                <h1 className="text-3xl lg:text-4xl font-bold mb-4 leading-tight">
+                <h1 className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
                   {post.title}
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed">
                   {post.excerpt}
                 </p>
               </div>
 
-              <div className="flex items-center justify-between py-4 border-t border-gray-100">
-                <div className="flex items-center space-x-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 sm:py-4 border-t border-gray-100 gap-3 sm:gap-0">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0">
                   <div className="flex items-center">
-                    <User className="h-4 w-4 mr-2 text-gray-500" />
-                    <span className="font-medium">{post.author}</span>
+                    <User className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-500" />
+                    <span className="font-medium text-sm sm:text-base">{post.author}</span>
                   </div>
                   <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>{new Date(post.created_at).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}</span>
+                    <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-500" />
+                    <span className="text-sm sm:text-base">
+                      <span className="hidden sm:inline">
+                        {new Date(post.created_at).toLocaleDateString('en-US', { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                        })}
+                      </span>
+                      <span className="sm:hidden">
+                        {new Date(post.created_at).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                        })}
+                      </span>
+                    </span>
                   </div>
                   <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-2 text-gray-500" />
-                    <span>{post.read_time}</span>
+                    <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-2 text-gray-500" />
+                    <span className="text-sm sm:text-base">{post.read_time}</span>
                   </div>
                 </div>
                 
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Eye className="h-4 w-4 mr-2 text-gray-500" />
+                <div className="flex items-center space-x-3 sm:space-x-4">
+                  <div className="flex items-center text-xs sm:text-sm text-gray-600">
+                    <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 text-gray-500" />
                     <span>{post.views}</span>
                   </div>
                   <button 
                     onClick={handleLike}
-                    className={`flex items-center text-sm transition-colors ${liked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'}`}
+                    className={`flex items-center text-xs sm:text-sm transition-colors ${liked ? 'text-red-500' : 'text-gray-600 hover:text-red-500'}`}
                   >
-                    <Heart className={`h-4 w-4 mr-1 ${liked ? 'fill-current' : ''}`} />
+                    <Heart className={`h-3 w-3 sm:h-4 sm:w-4 mr-1 ${liked ? 'fill-current' : ''}`} />
                     <span>{post.likes}</span>
                   </button>
-                  <Button variant="ghost" size="sm" onClick={handleShare}>
-                    <Share2 className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" onClick={handleShare} className="p-1 sm:p-2">
+                    <Share2 className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </div>
               </div>
             </div>
 
             {/* Featured Image */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
-              <div className="aspect-video bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <div className="w-20 h-20 bg-white rounded-lg flex items-center justify-center mx-auto mb-3 shadow-lg">
-                    📱
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden mb-6 sm:mb-8">
+              <div className="aspect-video relative overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100">
+                <img 
+                  src={post.image_url} 
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const fallback = target.nextElementSibling as HTMLElement;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-purple-100 flex items-center justify-center text-gray-500 hidden">
+                  <div className="text-center">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-lg flex items-center justify-center mx-auto mb-3 shadow-lg">
+                      📱
+                    </div>
+                    <p className="font-medium text-sm sm:text-base">Featured Image</p>
+                    <p className="text-xs sm:text-sm">{post.title}</p>
                   </div>
-                  <p className="font-medium">Featured Image</p>
-                  <p className="text-sm">{post.title}</p>
                 </div>
               </div>
             </div>
 
             {/* Content */}
-            <div className="bg-white rounded-xl shadow-sm p-8 mb-8">
-              <div className="prose prose-lg max-w-none">
+            <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+              <div className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
                 <div 
-                  className="text-gray-700 leading-relaxed text-lg"
+                  className="text-gray-700 leading-relaxed text-sm sm:text-base lg:text-lg"
                   dangerouslySetInnerHTML={{ __html: post.content.replace(/\n/g, '<br/>') }}
                 />
                 
                 {/* Interactive Elements */}
                 {post.interactive_elements && post.interactive_elements.length > 0 && (
-                  <div className="mt-12 space-y-8">
-                    <h2 className="text-2xl font-bold mb-6 text-center">Interactive Features</h2>
+                  <div className="mt-8 sm:mt-12 space-y-6 sm:space-y-8">
+                    <h2 className="text-lg sm:text-xl lg:text-2xl font-bold mb-4 sm:mb-6 text-center">Interactive Features</h2>
                     {post.interactive_elements.map((element, index) => (
-                      <div key={index} className="my-8">
+                      <div key={index} className="my-6 sm:my-8">
                         <InteractiveBlogComponents element={element} />
                       </div>
                     ))}
