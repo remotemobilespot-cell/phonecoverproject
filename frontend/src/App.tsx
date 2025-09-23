@@ -22,6 +22,7 @@ import Dashboard from './pages/Dashboard';
 
 // ✅ Import admin pages and context
 import AdminPage from './pages/Admin';
+import SecureAdminWrapper from './pages/SecureAdminWrapper';
 import { AdminProvider } from './contexts/AdminContext';
 
 const queryClient = new QueryClient();
@@ -49,8 +50,16 @@ const App = () => (
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/dashboard" element={<Dashboard />} />
 
-          {/* ✅ Admin routes */}
-          <Route path="/admin" element={<AdminPage />} />
+          {/* ✅ Admin routes - DEBUG: Direct route */}
+          <Route path="/admin-debug-direct" element={<AdminPage />} />
+          
+          {/* ✅ Admin routes - Only available in development */}
+          {import.meta.env.DEV && (
+            <Route path="/internal-ops-dashboard-7k9x2" element={<SecureAdminWrapper />} />
+          )}
+          {import.meta.env.PROD && (
+            <Route path="/sys-mgmt-portal-prod" element={<SecureAdminWrapper />} />
+          )}
 
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />

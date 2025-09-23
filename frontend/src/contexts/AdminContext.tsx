@@ -9,6 +9,7 @@ interface Admin {
 interface AdminContextType {
   admin: Admin | null;
   token: string | null;
+  isAuthenticated: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   isLoading: boolean;
@@ -114,9 +115,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
 
       // Fallback to demo mode if API is not available
-      if (username === 'admin' && password === 'admin123') {
+      if ((username === 'admin' || username === 'admin@printphonecover.com') && password === 'admin123') {
         const demoAdmin = {
-          username: 'admin',
+          username: 'admin@printphonecover.com',
           role: 'administrator',
           loginTime: new Date().toISOString()
         };
@@ -146,7 +147,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <AdminContext.Provider value={{ admin, token, login, logout, isLoading }}>
+    <AdminContext.Provider value={{ 
+      admin, 
+      token, 
+      isAuthenticated: !!admin, 
+      login, 
+      logout, 
+      isLoading 
+    }}>
       {children}
     </AdminContext.Provider>
   );
