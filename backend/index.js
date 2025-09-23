@@ -16,6 +16,7 @@ import newsletterRouter from './src/routes/newsletter.js';
 import locationsRouter from './src/routes/locations.js';
 import contactRouter from './src/routes/contact.js';
 import paymentsRouter from './src/routes/payments.js';
+import blogRouter from './src/routes/blog.js';
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use('/api/newsletter', newsletterRouter);
 app.use('/api/locations', locationsRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/payments', paymentsRouter);
+app.use('/api/blog', blogRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

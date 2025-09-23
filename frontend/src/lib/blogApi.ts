@@ -1,8 +1,8 @@
 // Blog API service for frontend
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+// TEMPORARY FIX: Always use production backend for now
+const API_BASE_URL = 'https://phonecoverproject-1.onrender.com';
 
 console.log('🔧 Blog API Debug:', {
-  VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
   API_BASE_URL,
   fullUrl: `${API_BASE_URL}/api/blog/posts`
 });
