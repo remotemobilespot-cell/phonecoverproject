@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar, User, ArrowRight, Search, Filter, Clock, Eye, Heart, Share2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { getBlogPosts, getBlogCategories, likeBlogPost, type BlogPost, type BlogCategory } from '@/lib/blogApi';
+import { getBlogPosts, getBlogCategories, likeBlogPost, type BlogPost, type BlogCategory } from '@/lib/blogApi-mock';
 import { SEOHead } from '@/components/SEOHead';
 
 export default function Blog() {
@@ -141,7 +141,7 @@ export default function Blog() {
                         <User className="h-3 w-3 mr-1" />
                         <span className="mr-3">{post.author}</span>
                         <Calendar className="h-3 w-3 mr-1" />
-                        <span>{new Date(post.date).toLocaleDateString()}</span>
+                        <span>{new Date(post.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
                   </div>
@@ -231,7 +231,7 @@ export default function Blog() {
                   </Badge>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="h-3 w-3" />
-                    <span>{post.readTime}</span>
+                    <span>{post.read_time}</span>
                   </div>
                 </div>
                 <h3 className="text-lg font-semibold line-clamp-2 group-hover:text-blue-600 transition-colors leading-tight">
@@ -251,7 +251,7 @@ export default function Blog() {
                   </div>
                   <div className="flex items-center">
                     <Calendar className="h-3 w-3 mr-1" />
-                    <span>{new Date(post.date).toLocaleDateString()}</span>
+                    <span>{new Date(post.created_at).toLocaleDateString()}</span>
                   </div>
                 </div>
 

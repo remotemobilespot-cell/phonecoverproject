@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, User, ArrowLeft, Clock, Eye, Heart, Share2, Tag, Loader2 } from 'lucide-react';
-import { getBlogPost, likeBlogPost, type BlogPost as BlogPostType } from '@/lib/blogApi';
+import { getBlogPost, likeBlogPost, type BlogPost as BlogPostType } from '@/lib/blogApi-mock';
 import { BlogSEO } from '@/components/SEOHead';
 import { InteractiveBlogComponents } from '@/components/InteractiveBlogComponents';
 import { toast } from 'sonner';
