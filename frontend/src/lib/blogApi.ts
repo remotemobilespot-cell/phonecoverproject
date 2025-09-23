@@ -105,7 +105,7 @@ export const getBlogPosts = async ({
     if (search) params.append('search', search);
 
     console.log('🔧 Making API request to:', `${API_BASE_URL}/api/blog/posts?${params}`);
-    const response = await fetch(`${API_BASE_URL}/api/blog/posts?${params}`);
+    const response = await fetch(`${API_BASE_URL}/api/blog-direct/posts?${params}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

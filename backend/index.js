@@ -61,6 +61,57 @@ app.use('/api/contact', contactRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/blog', blogRouter);
 
+// Direct blog test endpoint
+app.get('/api/blog-direct/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Direct blog endpoint working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Direct blog posts endpoint with mock data
+app.get('/api/blog-direct/posts', (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      posts: [
+        {
+          id: 1,
+          title: 'Amazing Custom Phone Case Designs',
+          slug: 'amazing-custom-phone-case-designs',
+          excerpt: 'Discover the latest trends in custom phone case design.',
+          author: 'Design Team',
+          category: 'Design Tips',
+          featured: true,
+          image_url: '/images/blog/design-trends.jpg',
+          read_time: '5 min read',
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          title: 'Photography Tips for Perfect Case Images',
+          slug: 'photography-tips-perfect-case-images',
+          excerpt: 'Learn how to capture stunning photos for your custom designs.',
+          author: 'Photo Team',
+          category: 'Photography',
+          featured: false,
+          image_url: '/images/blog/photography-tips.jpg',
+          read_time: '7 min read',
+          created_at: new Date().toISOString()
+        }
+      ],
+      pagination: {
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 2,
+        hasNext: false,
+        hasPrev: false
+      }
+    }
+  });
+});
+
 console.log('✅ Blog routes registered at /api/blog');
 
 const PORT = process.env.PORT || 5000;
