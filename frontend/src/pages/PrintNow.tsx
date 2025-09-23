@@ -718,8 +718,8 @@ export default function PrintNow() {
       try {
         console.log('Creating order via API...');
         // Use environment variable for API URL with smart defaults
-        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 
-          (import.meta.env.PROD ? 'https://phonecoverproject-1.onrender.com' : 'http://localhost:3001');
+        // TEMPORARY FIX: Always use production backend for now
+        const apiBaseUrl = 'https://phonecoverproject-1.onrender.com';
         
         console.log('Using API URL:', apiBaseUrl); // Debug log
         
