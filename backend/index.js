@@ -17,8 +17,9 @@ import locationsRouter from './src/routes/locations.js';
 import contactRouter from './src/routes/contact.js';
 import paymentsRouter from './src/routes/payments.js';
 import blogRouter from './src/routes/blog-test.js';
+import adminRouter from './src/routes/admin.js';
 
-console.log('✅ All routes imported successfully, including blog router');
+console.log('✅ All routes imported successfully, including admin router');
 
 const app = express();
 
@@ -60,6 +61,9 @@ app.use('/api/locations', locationsRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/blog', blogRouter);
+app.use('/api/admin', adminRouter);
+
+console.log('✅ Admin routes configured at /api/admin');
 
 // Direct blog test endpoint
 app.get('/api/blog-direct/test', (req, res) => {
