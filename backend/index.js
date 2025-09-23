@@ -16,7 +16,7 @@ import newsletterRouter from './src/routes/newsletter.js';
 import locationsRouter from './src/routes/locations.js';
 import contactRouter from './src/routes/contact.js';
 import paymentsRouter from './src/routes/payments.js';
-import blogRouter from './src/routes/blog.js';
+import blogRouter from './src/routes/blog-simple.js';
 
 const app = express();
 
