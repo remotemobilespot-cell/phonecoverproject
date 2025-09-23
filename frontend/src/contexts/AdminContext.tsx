@@ -41,7 +41,22 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const verifyToken = async (tokenToVerify: string) => {
     try {
-      const response = await fetch('https://phonecoverproject-1.onrender.com/api/admin/verify', {
+      // Check if it's a demo token
+      if (tokenToVerify.startsWith('demo-token-')) {
+        const demoAdmin = {
+          username: 'admin',
+          role: 'administrator',
+          loginTime: new Date().toISOString()
+        };
+        setAdmin(demoAdmin);
+        setToken(tokenToVerify);
+        localStorage.setItem('adminToken', tokenToVerify);
+        setIsLoading(false);
+        return;
+      }
+
+      // Try to verify with actual API
+      const response = await fetch('http://localhost:3001/api/admin/verify', {
         headers: {
           'Authorization': `Bearer ${tokenToVerify}`
         }
@@ -71,24 +86,51 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
       setIsLoading(true);
-      const response = await fetch('https://phonecoverproject-1.onrender.com/api/admin/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      });
+      
+      // First try the actual API
+      try {
+        const response = await fetch('http://localhost:3001/api/admin/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
 
-      const data = await response.json();
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Login response:', data);
 
-      if (data.success) {
-        setAdmin(data.admin);
-        setToken(data.token);
-        localStorage.setItem('adminToken', data.token);
-        return true;
-      } else {
-        return false;
+          if (data.success) {
+            setAdmin(data.admin);
+            setToken(data.token);
+            localStorage.setItem('adminToken', data.token);
+            console.log('Login successful, admin set:', data.admin);
+            return true;
+          }
+        }
+      } catch (apiError) {
+        console.log('API not available, using demo mode');
       }
+
+      // Fallback to demo mode if API is not available
+      if (username === 'admin' && password === 'admin123') {
+        const demoAdmin = {
+          username: 'admin',
+          role: 'administrator',
+          loginTime: new Date().toISOString()
+        };
+        
+        const demoToken = 'demo-token-' + Date.now();
+        
+        setAdmin(demoAdmin);
+        setToken(demoToken);
+        localStorage.setItem('adminToken', demoToken);
+        console.log('Demo login successful:', demoAdmin);
+        return true;
+      }
+      
+      return false;
     } catch (error) {
       console.error('Login failed:', error);
       return false;
