@@ -84,6 +84,47 @@ router.get('/email-config', (req, res) => {
   });
 });
 
+// Simple email test endpoint
+router.get('/test-email', async (req, res) => {
+  try {
+    if (!process.env.SENDGRID_API_KEY) {
+      return res.json({
+        success: false,
+        message: 'SendGrid not configured'
+      });
+    }
+
+    const testEmail = {
+      to: 'r.eshwarkiran@gmail.com',
+      from: 'r.eshwarkiran@gmail.com',
+      subject: 'Test Email from PrintPhoneCase Backend',
+      html: `
+        <h2>Test Email</h2>
+        <p>This is a test email sent at ${new Date().toLocaleString()}</p>
+        <p>If you receive this, email functionality is working!</p>
+      `
+    };
+
+    await sgMail.send(testEmail);
+    
+    res.json({
+      success: true,
+      message: 'Test email sent successfully to r.eshwarkiran@gmail.com',
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Test email failed:', error);
+    
+    res.json({
+      success: false,
+      message: 'Test email failed',
+      error: error.message,
+      details: error.response?.body?.errors || null
+    });
+  }
+});
+
 // GET version of test endpoint (easier to test in browser)
 router.get('/test-order', (req, res) => {
   res.json({
