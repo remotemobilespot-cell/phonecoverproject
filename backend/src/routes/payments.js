@@ -69,7 +69,8 @@ router.get('/health', (req, res) => {
   res.json({ 
     success: true, 
     message: 'Payments API is working!',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    emailSystem: 'Email notifications active'
   });
 });
 
