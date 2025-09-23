@@ -20,17 +20,18 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import Dashboard from './pages/Dashboard';
 
-// ✅ Import admin pages
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
+// ✅ Import admin pages and context
+import AdminPage from './pages/Admin';
+import { AdminProvider } from './contexts/AdminContext';
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <BrowserRouter>
+      <AdminProvider>
+        <Toaster />
+        <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/find-machine" element={<FindMachine />} />
@@ -49,13 +50,13 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
 
           {/* ✅ Admin routes */}
-          <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminPage />} />
 
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      </AdminProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
