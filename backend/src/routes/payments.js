@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import sgMail from '@sendgrid/mail';
 import { supabase } from '../supabaseClient.js';
+import { sendOrderEmails } from '../utils/emailService.js';
 
 // Ensure environment variables are loaded
 dotenv.config();
@@ -18,52 +19,6 @@ if (process.env.SENDGRID_API_KEY) {
 
 const router = express.Router();
 
-// Function to send order notification email
-const sendOrderNotification = async (orderData) => {
-  if (!process.env.SENDGRID_API_KEY) {
-    console.log('SendGrid not configured - skipping email notification');
-    return false;
-  }
-
-  try {
-    const emailContent = {
-      to: 'r.eshwarkiran@gmail.com', // Your notification email
-      from: 'r.eshwarkiran@gmail.com', // Must be verified sender
-      subject: `New Order Received - Order #${orderData.id}`,
-      html: `
-        <h2>New Order Received!</h2>
-        <p><strong>Order ID:</strong> ${orderData.id}</p>
-        <p><strong>Customer:</strong> ${orderData.contact_name}</p>
-        <p><strong>Email:</strong> ${orderData.contact_email}</p>
-        <p><strong>Phone:</strong> ${orderData.contact_phone || 'Not provided'}</p>
-        <p><strong>Phone Model:</strong> ${orderData.phone_model}</p>
-        <p><strong>Case Type:</strong> ${orderData.case_type || 'regular'}</p>
-        <p><strong>Amount:</strong> $${orderData.amount}</p>
-        <p><strong>Fulfillment Method:</strong> ${orderData.fulfillment_method}</p>
-        ${orderData.delivery_address ? `<p><strong>Delivery Address:</strong> ${orderData.delivery_address}</p>` : ''}
-        <p><strong>Order Time:</strong> ${new Date().toLocaleString()}</p>
-        
-        <h3>Order Details:</h3>
-        <p>Design Image: ${orderData.design_image}</p>
-        ${orderData.original_image ? `<p>Original Image: ${orderData.original_image}</p>` : ''}
-      `
-    };
-
-    await sgMail.send(emailContent);
-    console.log('Order notification email sent successfully');
-    return true;
-  } catch (error) {
-    console.error('Failed to send order notification email:', error);
-    
-    // Log detailed error information
-    if (error.response && error.response.body && error.response.body.errors) {
-      console.error('SendGrid error details:', JSON.stringify(error.response.body.errors, null, 2));
-    }
-    
-    return false;
-  }
-};
-
 // Health check endpoint for payments API
 router.get('/health', (req, res) => {
   res.json({ 
@@ -76,13 +31,47 @@ router.get('/health', (req, res) => {
 
 // SendGrid configuration check endpoint
 router.get('/email-config', (req, res) => {
-  const sendGridConfigured = !!process.env.SENDGRID_API_KEY;
+  const sendGridConfigured = !!process.env.SENDGRID_API_KEY && process.env.SENDGRID_API_KEY !== 'YOUR_SENDGRID_API_KEY_HERE';
+  const demoMode = !process.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY === 'YOUR_SENDGRID_API_KEY_HERE';
+  
   res.json({
     success: true,
     sendGridConfigured: sendGridConfigured,
+    demoMode: demoMode,
     sendGridKeyLength: process.env.SENDGRID_API_KEY ? process.env.SENDGRID_API_KEY.length : 0,
-    message: sendGridConfigured ? 'SendGrid is configured' : 'SendGrid API key is missing'
+    message: sendGridConfigured ? 'SendGrid is configured and ready' : 'Running in demo mode - emails will be logged but not sent'
   });
+});
+
+// Test email endpoint
+router.post('/test-email', async (req, res) => {
+  try {
+    const testOrder = {
+      id: 'TEST-' + Date.now(),
+      contact_name: 'Test Customer',
+      contact_email: 'test@example.com',
+      phone_model: 'iPhone 15 Pro',
+      case_type: 'Premium',
+      amount: '29.99',
+      fulfillment_method: 'Pickup'
+    };
+
+    const emailResults = await sendOrderEmails(testOrder);
+    
+    res.json({
+      success: true,
+      message: 'Email test completed',
+      emailResults,
+      testOrder,
+      sendGridConfigured: !!process.env.SENDGRID_API_KEY && process.env.SENDGRID_API_KEY !== 'YOUR_SENDGRID_API_KEY_HERE'
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      sendGridConfigured: !!process.env.SENDGRID_API_KEY && process.env.SENDGRID_API_KEY !== 'YOUR_SENDGRID_API_KEY_HERE'
+    });
+  }
 });
 
 // Simple email test endpoint
@@ -434,19 +423,14 @@ router.post('/create-order', async (req, res) => {
 
     console.log('Order created successfully:', order.id);
 
-    // Send email notification
-    const emailSent = await sendOrderNotification(order);
-    if (emailSent) {
-      console.log('Email notification sent for order:', order.id);
-    } else {
-      console.log('Email notification failed for order:', order.id);
-    }
+    // Send email notifications using the email service
+    const emailResults = await sendOrderEmails(order);
 
     res.json({
       success: true,
       order: order,
       message: 'Order created successfully',
-      emailSent: emailSent
+      emailSent: emailResults
     });
 
   } catch (error) {
