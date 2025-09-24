@@ -490,13 +490,35 @@ export default function PrintNow() {
     console.log('🔒 Final Session Order Object:', orderObj);
     
     // Insert order into database
-    const { error } = await supabase.from('orders').insert([orderObj]);
+    const { data: insertedOrder, error } = await supabase.from('orders').insert([orderObj]).select().single();
     if (error) {
       console.error('Database insertion error:', error);
       throw new Error(`Database error: ${error.message}`);
     }
     
     console.log('Order created successfully from session data');
+    
+    // IMPORTANT: Send emails after session-based order creation
+    console.log('📧 Sending emails for session-based order...');
+    try {
+      const emailResponse = await fetch(`https://phonecoverproject-1.onrender.com/api/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(insertedOrder),
+      });
+      
+      if (emailResponse.ok) {
+        const emailResult = await emailResponse.json();
+        console.log('✅ Session order emails sent successfully:', emailResult.emailSent);
+      } else {
+        console.error('❌ Session order email sending failed:', emailResponse.status);
+      }
+    } catch (emailError) {
+      console.error('❌ Failed to send session order emails:', emailError);
+      // Don't throw here - order was created successfully
+    }
   };
 
   const handleCheckout = async (paymentData?: any) => {
