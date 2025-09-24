@@ -739,16 +739,38 @@ export default function PrintNow() {
         console.log('Order created via API successfully:', result);
         
       } catch (apiError) {
-        console.warn('API endpoint failed, trying direct database insertion:', apiError);
+        console.warn('🚨 API endpoint failed, trying direct database insertion:', apiError);
+        console.error('API Error details:', apiError.message);
         
         // Fallback to direct database insertion
-        console.log('Attempting direct database insertion...');
-        const { error } = await supabase.from('orders').insert([orderObj]);
+        console.log('⚠️  Attempting direct database insertion...');
+        const { data: insertedOrder, error } = await supabase.from('orders').insert([orderObj]).select().single();
         if (error) {
           console.error('Database insertion error:', error);
           throw new Error(`Database error: ${error.message}`);
         }
         console.log('Order created via direct database insertion');
+        
+        // IMPORTANT: Send emails manually since we bypassed the API
+        console.log('📧 Sending emails manually after database insertion...');
+        try {
+          const emailResponse = await fetch(`https://phonecoverproject-1.onrender.com/api/orders`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(insertedOrder),
+          });
+          
+          if (emailResponse.ok) {
+            console.log('✅ Emails sent successfully via fallback');
+          } else {
+            console.error('❌ Email sending failed in fallback');
+          }
+        } catch (emailError) {
+          console.error('❌ Failed to send emails in fallback:', emailError);
+          // Don't throw here - order was created successfully
+        }
       }
 
       // Clean up blob URLs
