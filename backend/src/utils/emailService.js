@@ -21,7 +21,7 @@ export const sendAdminNotification = async (orderData) => {
     const emailContent = {
       to: 'r.eshwarkiran@gmail.com', // Your notification email
       from: {
-        email: 'r.eshwarkiran@gmail.com',
+        email: 'orders@printphonecover.com',
         name: 'PrintPhoneCase Order System'
       },
       replyTo: 'r.eshwarkiran@gmail.com',
@@ -107,10 +107,10 @@ export const sendCustomerConfirmation = async (orderData) => {
     const emailContent = {
       to: customerEmail,
       from: {
-        email: 'r.eshwarkiran@gmail.com',
-        name: 'PrintPhoneCase Order System'
+        email: 'noreply@printphonecover.com',
+        name: 'PrintPhoneCase'
       },
-      replyTo: 'r.eshwarkiran@gmail.com',
+      replyTo: 'support@printphonecover.com',
       subject: `Order Confirmation - PrintPhoneCase Order #${orderData.id || 'TBD'}`,
       text: `Order Confirmed! Thank you for choosing PrintPhoneCase. Order #${orderData.id || 'TBD'} for ${orderData.phone_model || 'phone case'} - $${orderData.amount || 'TBD'}. You will receive updates as we process your order.`,
       html: `
