@@ -20,7 +20,10 @@ export const sendAdminNotification = async (orderData) => {
   try {
     const emailContent = {
       to: 'r.eshwarkiran@gmail.com', // Your notification email
-      from: 'r.eshwarkiran@gmail.com', // Must be verified sender
+      from: {
+        email: 'r.eshwarkiran@gmail.com',
+        name: 'PrintPhoneCase'
+      }, // Must be verified sender
       subject: `New Order Received - Order #${orderData.id}`,
       html: `
         <h2>New Order Received!</h2>
@@ -85,7 +88,10 @@ export const sendCustomerConfirmation = async (orderData) => {
   try {
     const emailContent = {
       to: customerEmail,
-      from: 'r.eshwarkiran@gmail.com', // Must be verified sender
+      from: {
+        email: 'r.eshwarkiran@gmail.com',
+        name: 'PrintPhoneCase'
+      }, // Must be verified sender
       subject: `Order Confirmation - PrintPhoneCase Order #${orderData.id || 'TBD'}`,
       html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
