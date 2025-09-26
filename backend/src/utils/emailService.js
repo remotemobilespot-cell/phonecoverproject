@@ -7,7 +7,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 export const sendAdminNotification = async (orderData) => {
   if (!process.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY === 'YOUR_SENDGRID_API_KEY_HERE') {
     console.log('📧 [DEMO MODE] Admin notification would be sent:', {
-      to: 'r.eshwarkiran@gmail.com',
+      to: 'support@printphonecover.com',
       subject: `New Order Received - Order #${orderData.id}`,
       customerName: orderData.contact_name || 'Not provided',
       customerEmail: orderData.contact_email || orderData.email || 'Not provided',
@@ -19,15 +19,15 @@ export const sendAdminNotification = async (orderData) => {
 
   try {
     const emailContent = {
-      to: 'r.eshwarkiran@gmail.com', // Your notification email
+      to: 'support@printphonecover.com', // Admin notification email
       from: {
-        email: 'orders@printphonecover.com',
+        email: 'support@printphonecover.com',
         name: 'PrintPhoneCase Order System'
       },
-      replyTo: 'r.eshwarkiran@gmail.com',
-      subject: `New Order Received - Order #${orderData.id}`,
-      text: `New Order Received - Order #${orderData.id}\n\nOrder ID: ${orderData.id}\nCustomer: ${orderData.contact_name || 'Not provided'}\nEmail: ${orderData.contact_email || orderData.email || 'Not provided'}\nAmount: $${orderData.amount || 'Not specified'}`,
-      html: `
+      replyTo: 'support@printphonecover.com',
+  subject: `New Order Received - Order #${orderData.id}`,
+  text: `New Order Received - Order #${orderData.id}\n\nOrder ID: ${orderData.id}\nCustomer: ${orderData.contact_name || 'Not provided'}\nEmail: ${orderData.contact_email || orderData.email || 'Not provided'}\nAmount: $${orderData.amount || 'Not specified'}`,
+  html: `
         <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif; line-height: 1.6;">
           <div style="background-color: #f8f9fa; padding: 20px; border-bottom: 3px solid #007bff;">
             <h2 style="color: #007bff; margin: 0;">New Order Received!</h2>
@@ -107,7 +107,7 @@ export const sendCustomerConfirmation = async (orderData) => {
     const emailContent = {
       to: customerEmail,
       from: {
-        email: 'noreply@printphonecover.com',
+        email: 'support@printphonecover.com',
         name: 'PrintPhoneCase'
       },
       replyTo: 'support@printphonecover.com',
@@ -167,8 +167,7 @@ export const sendCustomerConfirmation = async (orderData) => {
             <p>Your custom phone case is being prepared! We'll send you updates as your order progresses.</p>
             
             <h3>Need Help?</h3>
-            <p>If you have any questions about your order, please contact us:</p>
-            <p>Email: r.eshwarkiran@gmail.com</p>
+            <p>If you have any questions about your order, please contact us at <a href="mailto:support@printphonecover.com">support@printphonecover.com</a>.</p>
           </div>
           
           <div style="background-color: #f3f4f6; padding: 15px; text-align: center; font-size: 12px; color: #6b7280;">
