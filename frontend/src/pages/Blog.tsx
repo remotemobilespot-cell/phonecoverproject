@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Calendar, User, ArrowRight, Search, Filter, Clock, Eye, Heart, Share2, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getBlogPosts, getBlogCategories, likeBlogPost, type BlogPost, type BlogCategory } from '@/lib/blogApi-mock';
-import { SEOHead } from '@/components/SEOHead';
+import { SEO } from '@/components/SEO';
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -101,13 +101,13 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <SEOHead
+      <SEO
         title="PrintPhoneCover Blog - Custom Phone Case Design Inspiration"
         description="Explore creative ideas, professional tips, and the latest trends in custom phone case design. Learn about our innovative printing technology."
         keywords="custom phone cases, design blog, phone case ideas, mobile accessories, personalization"
+        canonical="https://printphonecover.com/blog"
       />
       <Header />
-      
       <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-12">
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">

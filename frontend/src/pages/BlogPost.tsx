@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Calendar, User, ArrowLeft, Clock, Eye, Heart, Share2, Tag, Loader2 } from 'lucide-react';
 import { getBlogPost, likeBlogPost, type BlogPost as BlogPostType } from '@/lib/blogApi-mock';
-import { BlogSEO } from '@/components/SEOHead';
+import { SEO } from '@/components/SEO';
 import { InteractiveBlogComponents } from '@/components/InteractiveBlogComponents';
 import { toast } from 'sonner';
 
@@ -100,11 +100,23 @@ export default function BlogPost() {
     );
   }
 
+  // SEO meta tags for blog post
+  const seo = post ? {
+    title: `${post.title} | Blog | PrintPhoneCover`,
+    description: post.excerpt || post.title,
+    keywords: `blog, printphonecover blog, ${post.title}, phone case news, printphonecover.com`,
+    canonical: `https://printphonecover.com/blog/${post.slug}`
+  } : {
+    title: 'Blog Post | PrintPhoneCover',
+    description: 'Read this blog post on PrintPhoneCover.',
+    keywords: 'blog, printphonecover blog, phone case news, printphonecover.com',
+    canonical: 'https://printphonecover.com/blog'
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <BlogSEO post={post} />
+      <SEO {...seo} />
       <Header />
-      
       <main className="container mx-auto px-3 sm:px-4 py-6 sm:py-8">
         {/* Breadcrumb */}
         <nav className="mb-6 sm:mb-8">
