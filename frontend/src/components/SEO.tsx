@@ -1,12 +1,2 @@
-import { Helmet } from 'react-helmet-async';
-
-export function SEO({ title, description, keywords, canonical }) {
-  return (
-    <Helmet>
-      {title && <title>{title}</title>}
-      {description && <meta name="description" content={description} />}
-      {keywords && <meta name="keywords" content={keywords} />}
-      {canonical && <link rel="canonical" href={canonical} />}
-    </Helmet>
-  );
-}
+// Deprecated: Use SEOHead from './SEOHead' for SSR/Vercel compatibility.
+export { SEOHead as SEO } from './SEOHead';
