@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 
 export function SEO({ title, description, keywords, canonical }) {
   return (
