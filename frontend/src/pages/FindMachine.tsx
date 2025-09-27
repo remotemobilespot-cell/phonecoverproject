@@ -194,7 +194,7 @@ export default function FindMachine() {
 
   const handleNavigate = (location: StoreLocation) => {
     const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
-      `${location.address}, ${location.city}, ${location.state} ${location.zipCode}`
+      `${location.address}, ${location.city}, ${location.state} ${location.zipCode}`.replace(/,\s*,/g, ', ').replace(/,\s*$/, '')
     )}`;
     window.open(url, '_blank');
   };
