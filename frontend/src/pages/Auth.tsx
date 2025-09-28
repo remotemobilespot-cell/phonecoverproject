@@ -214,6 +214,9 @@ export default function AuthDashboard() {
                     <Button type="button" className="w-full" variant="outline" onClick={handleGoogleLogin} disabled={isLoading}>
                       {isLoading ? 'Redirecting...' : 'Sign in with Google'}
                     </Button>
+                    <Button type="button" className="w-full mt-2" variant="secondary" onClick={() => navigate('/')}> 
+                      Continue as Guest
+                    </Button>
                   </TabsContent>
                   
                   <TabsContent value="register">
@@ -304,6 +307,9 @@ export default function AuthDashboard() {
                     <Separator className="my-4" />
                     <Button type="button" className="w-full" variant="outline" onClick={handleGoogleLogin} disabled={isLoading}>
                       {isLoading ? 'Redirecting...' : 'Sign up with Google'}
+                    </Button>
+                    <Button type="button" className="w-full mt-2" variant="secondary" onClick={() => navigate('/')}> 
+                      Continue as Guest
                     </Button>
                   </TabsContent>
                 </Tabs>
