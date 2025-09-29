@@ -1,3 +1,32 @@
+import twilio from 'twilio';
+
+const twilioClient = process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN
+  ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
+  : null;
+
+export const sendOrderSMS = async (orderData) => {
+  const customerPhone = orderData.contact_phone || orderData.phone;
+  if (!customerPhone) {
+    console.log('No customer phone provided - skipping SMS');
+    return false;
+  }
+  if (!twilioClient || !process.env.TWILIO_PHONE_NUMBER) {
+    console.log('Twilio not configured - skipping SMS');
+    return false;
+  }
+  try {
+    await twilioClient.messages.create({
+      body: `Your order is confirmed! Thank you for shopping with PrintPhoneCover. Order #${orderData.id || ''}`,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: customerPhone
+    });
+    console.log('Order confirmation SMS sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Failed to send order confirmation SMS:', error);
+    return false;
+  }
+};
 import sgMail from '@sendgrid/mail';
 
 // Set SendGrid API key from environment variable

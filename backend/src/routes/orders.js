@@ -1,6 +1,6 @@
 import express from 'express';
 import sgMail from '@sendgrid/mail';
-import { sendOrderEmails } from '../utils/emailService.js';
+import { sendOrderEmails, sendOrderSMS } from '../utils/emailService.js';
 const router = express.Router();
 
 // Set SendGrid API key from environment variable
@@ -24,11 +24,14 @@ router.post('/', async (req, res) => {
 
     // Send both admin and customer notification emails
     const emailResults = await sendOrderEmails(order);
+    // Send SMS confirmation
+    const smsResult = await sendOrderSMS(order);
 
     res.status(201).json({ 
       success: true, 
       message: 'Order created and notifications sent.',
-      emailSent: emailResults
+      emailSent: emailResults,
+      smsSent: smsResult
     });
   } catch (error) {
     console.error('❌ Error creating order or sending emails:', error);
