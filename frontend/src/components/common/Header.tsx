@@ -44,12 +44,7 @@ export default function Header() {
     navigate('/');
   };
 
-  const handlePrintNowClick = (e: React.MouseEvent) => {
-    if (!user) {
-      e.preventDefault();
-      navigate('/auth');
-    }
-  };
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -81,12 +76,8 @@ export default function Header() {
               Find Machine
             </Link>
           </Button>
-          <Button size="sm" onClick={handlePrintNowClick} asChild={!!user}>
-            {user ? (
-              <Link to="/print-now">Print Now</Link>
-            ) : (
-              <span>Print Now</span>
-            )}
+          <Button size="sm" asChild>
+            <Link to="/print-now">Print Now</Link>
           </Button>
           {user ? (
             <div className="flex items-center space-x-2">
@@ -136,17 +127,10 @@ export default function Header() {
                 </Button>
                 <Button 
                   className="w-full" 
-                  onClick={(e) => {
-                    handlePrintNowClick(e);
-                    setIsOpen(false);
-                  }}
-                  asChild={!!user}
+                  asChild
+                  onClick={() => setIsOpen(false)}
                 >
-                  {user ? (
-                    <Link to="/print-now">Print Now</Link>
-                  ) : (
-                    <span>Print Now</span>
-                  )}
+                  <Link to="/print-now">Print Now</Link>
                 </Button>
                 {user ? (
                   <div className="space-y-2">
