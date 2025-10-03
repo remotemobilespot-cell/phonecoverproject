@@ -21,3 +21,4 @@ Backend API for the custom phone case print website using Node.js, Express, and 
 ## Supabase
 - Make sure your Supabase project has tables for products, orders, users, testimonials, newsletter, and locations.
 - Configure storage for image uploads.
+# Multi-Owner Deployment Check - Fri, Oct  3, 2025  3:23:20 PM
