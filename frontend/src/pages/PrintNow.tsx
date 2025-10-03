@@ -11,6 +11,7 @@ import Step2ImageUpload from '@/pages/components/printflow/ImageUpload';
 import Step3ImageEditor from '@/pages/components/printflow/ImageEditor';
 import Fulfillment from '@/pages/components/printflow/Fulfillment';
 import Step5Payment from '@/pages/components/printflow/Payment';
+import OrderSuccess from '@/components/OrderSuccess';
 
 interface FilterValues {
   brightness: number;
@@ -82,6 +83,10 @@ export default function PrintNow() {
   const [user, setUser] = useState<any>(null);
   const [orders, setOrders] = useState<any[]>([]);
   const [nearbyLocations, setNearbyLocations] = useState<any[]>([]);
+  
+  // Order success states
+  const [completedOrderNumber, setCompletedOrderNumber] = useState<string>('');
+  const [completedOrderData, setCompletedOrderData] = useState<any>(null);
 
   const navigate = useNavigate();
   const totalSteps = 5;
@@ -496,7 +501,18 @@ export default function PrintNow() {
       throw new Error(`Database error: ${error.message}`);
     }
     
-    console.log('Order created successfully from session data');
+    console.log('Order created successfully from session data:', insertedOrder);
+    
+    // Store order data for success page
+    setCompletedOrderNumber(insertedOrder.order_number || `PC-${insertedOrder.id.slice(0,8)}`);
+    setCompletedOrderData({
+      contact_name: insertedOrder.contact_name,
+      contact_email: insertedOrder.contact_email,
+      phone_model: insertedOrder.phone_model,
+      amount: insertedOrder.amount,
+      case_type: insertedOrder.case_type,
+      fulfillment_method: insertedOrder.delivery_method
+    });
     
     // IMPORTANT: Send emails after session-based order creation
     console.log('📧 Sending emails for session-based order...');
@@ -760,6 +776,19 @@ export default function PrintNow() {
         const result = await response.json();
         console.log('Order created via API successfully:', result);
         
+        // Store order data for success page from API response
+        if (result.order) {
+          setCompletedOrderNumber(result.order.order_number || result.order_number || `PC-${result.order.id.slice(0,8)}`);
+          setCompletedOrderData({
+            contact_name: result.order.contact_name,
+            contact_email: result.order.contact_email,
+            phone_model: result.order.phone_model,
+            amount: result.order.amount,
+            case_type: result.order.case_type,
+            fulfillment_method: result.order.delivery_method
+          });
+        }
+        
       } catch (apiError) {
         console.warn('🚨 API endpoint failed, trying direct database insertion:', apiError);
         console.error('API Error details:', apiError.message);
@@ -771,7 +800,18 @@ export default function PrintNow() {
           console.error('Database insertion error:', error);
           throw new Error(`Database error: ${error.message}`);
         }
-        console.log('Order created via direct database insertion');
+        console.log('Order created via direct database insertion:', insertedOrder);
+        
+        // Store order data for success page from direct insertion
+        setCompletedOrderNumber(insertedOrder.order_number || `PC-${insertedOrder.id.slice(0,8)}`);
+        setCompletedOrderData({
+          contact_name: insertedOrder.contact_name,
+          contact_email: insertedOrder.contact_email,
+          phone_model: insertedOrder.phone_model,
+          amount: insertedOrder.amount,
+          case_type: insertedOrder.case_type,
+          fulfillment_method: insertedOrder.delivery_method
+        });
         
         // IMPORTANT: Send emails manually since we bypassed the API
         console.log('📧 Sending emails manually after database insertion...');
@@ -1058,44 +1098,10 @@ export default function PrintNow() {
               )}
 
               {step === 6 && (
-                <Card className="text-center">
-                  <CardContent className="p-12">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <Check className="h-8 w-8 text-green-600" />
-                    </div>
-                    <h2 className="text-3xl font-bold mb-4">Order Confirmed!</h2>
-                    <p className="text-lg text-gray-600 mb-6">
-                      {fulfillmentMethod === 'pickup'
-                        ? 'Your custom phone case will be ready for pickup in 5-10 minutes.'
-                        : 'Your custom phone case will be delivered in 1-2 business days.'}
-                    </p>
-                    <div className="space-y-3 mb-6">
-                      <p className="text-sm text-gray-600">
-                        Order confirmation will be sent to: <strong>{orderData.email}</strong>
-                      </p>
-                      {editedImageUrl && (
-                        <div className="flex justify-center">
-                          <img 
-                            src={editedImageUrl} 
-                            alt="Your design" 
-                            className="w-20 h-28 object-cover rounded border shadow-lg"
-                          />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-4 justify-center">
-                      <Button 
-                        variant="outline" 
-                        onClick={() => navigate('/')}
-                      >
-                        Go to Home
-                      </Button>
-                      <Button onClick={() => window.location.reload()}>
-                        Create Another Case
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <OrderSuccess 
+                  orderNumber={completedOrderNumber}
+                  orderData={completedOrderData}
+                />
               )}
             </>
           )}

@@ -19,6 +19,17 @@ if (process.env.SENDGRID_API_KEY) {
 
 const router = express.Router();
 
+// Generate a user-friendly order number (format: PC-YYYYMMDD-XXXX)
+const generateOrderNumber = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const random = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
+  
+  return `PC-${year}${month}${day}-${random}`;
+};
+
 // Health check endpoint for payments API
 router.get('/health', (req, res) => {
   res.json({ 
@@ -320,9 +331,11 @@ router.post('/test-order', async (req, res) => {
     console.log('Test order endpoint called with data:', req.body);
     
     // Try a very simple insert with minimal data
+    const testOrderNumber = generateOrderNumber();
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert([{
+        order_number: testOrderNumber,
         phone_model: 'Test Phone',
         contact_name: 'Test User',
         contact_email: 'test@example.com',
@@ -344,12 +357,13 @@ router.post('/test-order', async (req, res) => {
       });
     }
 
-    console.log('Test order created successfully:', order.id);
+    console.log('Test order created successfully:', order.id, 'Order Number:', order.order_number);
 
     res.json({
       success: true,
       message: 'Test order created successfully',
-      order_id: order.id
+      order_id: order.id,
+      order_number: order.order_number
     });
 
   } catch (error) {
@@ -378,8 +392,12 @@ router.post('/create-order', async (req, res) => {
       });
     }
 
+    // Generate user-friendly order number
+    const orderNumber = generateOrderNumber();
+
     // Prepare the order object with proper data type handling
     const orderRecord = {
+      order_number: orderNumber,
       phone_model: orderData.phone_model,
       phone_model_id: orderData.phone_model_id || null, // Keep as string (UUID)
       case_type: orderData.case_type || 'regular', // ADD: Store case type
@@ -421,7 +439,7 @@ router.post('/create-order', async (req, res) => {
       });
     }
 
-    console.log('Order created successfully:', order.id);
+    console.log('Order created successfully:', order.id, 'Order Number:', order.order_number);
 
     // Send email notifications using the email service
     const emailResults = await sendOrderEmails(order);
@@ -430,6 +448,7 @@ router.post('/create-order', async (req, res) => {
       success: true,
       order: order,
       message: 'Order created successfully',
+      order_number: order.order_number,
       emailSent: emailResults
     });
 
@@ -456,8 +475,10 @@ router.post('/mock-payment', async (req, res) => {
     const mockPaymentId = 'pi_mock_' + Math.random().toString(36).substr(2, 9);
 
     // Create order in database
+    const mockOrderNumber = generateOrderNumber();
     const orderObj = {
       ...order_data,
+      order_number: mockOrderNumber,
       payment_transaction_id: mockPaymentId,
       payment_status: 'completed',
       payment_method: 'card',

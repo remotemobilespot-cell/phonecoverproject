@@ -39,6 +39,7 @@ import { toast } from 'sonner';
 // Interface definitions
 interface Order {
   id: string;
+  order_number?: string;
   phone_model_id: string;
   case_type?: string;
   design_image_url?: string;
@@ -1607,10 +1608,13 @@ const AdminDashboard: React.FC = () => {
                     >
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                         
-                        {/* Order ID & Status */}
+                        {/* Order Number & Status */}
                         <div className="lg:col-span-2">
-                          <div className="font-semibold text-sm text-gray-800">
-                            #{order.id.slice(-6).toUpperCase()}
+                          <div className="font-semibold text-sm text-blue-600">
+                            {order.order_number ? order.order_number : `#${order.id.slice(-6).toUpperCase()}`}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            ID: {order.id.slice(-6)}
                           </div>
                           <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                             order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :

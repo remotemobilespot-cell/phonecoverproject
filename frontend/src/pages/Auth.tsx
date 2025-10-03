@@ -455,7 +455,10 @@ export default function AuthDashboard() {
                       <div key={order.id} className="border rounded-lg p-4">
                         <div className="flex justify-between items-start mb-3">
                           <div>
-                            <h4 className="font-medium">Order #{order.id.slice(0,8)}</h4>
+                            <h4 className="font-medium text-blue-600">
+                              {order.order_number ? order.order_number : `Order #${order.id.slice(0,8)}`}
+                            </h4>
+                            <p className="text-xs text-gray-500">ID: {order.id.slice(0,8)}</p>
                             <p className="text-sm text-gray-600">{new Date(order.created_at).toLocaleDateString()}</p>
                           </div>
                           <div className="text-right">

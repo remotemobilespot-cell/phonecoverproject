@@ -46,6 +46,7 @@ import { toast } from 'sonner';
 // Interface definitions
 interface Order {
   id: string;
+  order_number?: string;
   phone_model_id: string;
   case_type?: string;
   design_image_url?: string;
@@ -1388,6 +1389,7 @@ const AdminDashboard: React.FC = () => {
                          (order.contact_name || '').toLowerCase().includes(searchLower) ||
                          (order.phone_model_details?.name || '').toLowerCase().includes(searchLower) ||
                          (order.phone_model_details?.brand || '').toLowerCase().includes(searchLower) ||
+                         (order.order_number || '').toLowerCase().includes(searchLower) ||
                          order.id.toLowerCase().includes(searchLower);
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -1741,10 +1743,13 @@ const AdminDashboard: React.FC = () => {
                     >
                       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                         
-                        {/* Order ID & Status */}
+                        {/* Order Number & Status */}
                         <div className="lg:col-span-2">
-                          <div className="font-semibold text-sm text-gray-800">
-                            #{order.id.slice(-6).toUpperCase()}
+                          <div className="font-semibold text-sm text-blue-600">
+                            {order.order_number ? order.order_number : `#${order.id.slice(-6).toUpperCase()}`}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            ID: {order.id.slice(-6)}
                           </div>
                           <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
                             order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
@@ -2116,7 +2121,14 @@ const AdminDashboard: React.FC = () => {
                   <DialogHeader>
                     <DialogTitle className="text-xl">📋 Complete Order Details</DialogTitle>
                     <DialogDescription>
-                      Order ID: {selectedOrder.id} • Created: {new Date(selectedOrder.created_at).toLocaleString()}
+                      <div className="flex flex-col space-y-1">
+                        <div className="text-lg font-semibold text-blue-600">
+                          Order: {selectedOrder.order_number ? selectedOrder.order_number : `#${selectedOrder.id.slice(-6).toUpperCase()}`}
+                        </div>
+                        <div className="text-sm">
+                          ID: {selectedOrder.id} • Created: {new Date(selectedOrder.created_at).toLocaleString()}
+                        </div>
+                      </div>
                     </DialogDescription>
                   </DialogHeader>
                   
