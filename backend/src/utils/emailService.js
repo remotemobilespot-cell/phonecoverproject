@@ -294,36 +294,113 @@ export const sendOrderEmails = async (orderData) => {
   };
 };
 
-// Enhanced notification system for both owner and customer
+// Get store owners configuration from environment or database
+const getStoreOwners = () => {
+  const owners = [];
+  
+  // Parse multiple owners from environment variables 
+  // Format: OWNER_1_EMAIL=email1@domain.com,OWNER_1_PHONE=+1234567890,OWNER_1_NAME=John
+  let i = 1;
+  while (process.env[`OWNER_${i}_EMAIL`] || process.env[`OWNER_${i}_PHONE`]) {
+    const owner = {
+      id: i,
+      name: process.env[`OWNER_${i}_NAME`] || `Owner ${i}`,
+      email: process.env[`OWNER_${i}_EMAIL`],
+      phone: process.env[`OWNER_${i}_PHONE`],
+      stores: process.env[`OWNER_${i}_STORES`]?.split(',') || [], // Store IDs this owner manages
+      isDefault: process.env[`OWNER_${i}_DEFAULT`] === 'true'
+    };
+    owners.push(owner);
+    i++;
+  }
+  
+  // Fallback to single owner configuration
+  if (owners.length === 0 && (process.env.OWNER_PHONE_NUMBER || process.env.ADMIN_EMAIL)) {
+    owners.push({
+      id: 1,
+      name: 'Admin',
+      email: process.env.ADMIN_EMAIL || 'support@printphonecover.com',
+      phone: process.env.OWNER_PHONE_NUMBER,
+      stores: [], // Manages all stores
+      isDefault: true
+    });
+  }
+  
+  return owners;
+};
+
+// Get relevant owners for a specific order/store
+const getRelevantOwners = (orderData, allOwners) => {
+  const storeId = orderData.store_location_id || orderData.pickup_location_id;
+  
+  if (!storeId) {
+    // No specific store, notify all default owners
+    return allOwners.filter(owner => owner.isDefault || owner.stores.length === 0);
+  }
+  
+  // Find owners who manage this specific store
+  const storeOwners = allOwners.filter(owner => 
+    owner.stores.includes(storeId.toString()) || 
+    owner.stores.length === 0 || // Owners with no specific stores manage all
+    owner.isDefault
+  );
+  
+  return storeOwners.length > 0 ? storeOwners : allOwners.filter(owner => owner.isDefault);
+};
+
+// Enhanced notification system for multiple owners and customer
 export const sendOrderNotifications = async (orderData) => {
-  console.log('📧 Starting comprehensive order notifications...');
+  console.log('📧 Starting comprehensive multi-owner order notifications...');
   
   const results = {
-    ownerEmail: false,
+    ownerEmails: [],
     customerEmail: false,
-    ownerSMS: false,
-    customerSMS: false
+    ownerSMS: [],
+    customerSMS: false,
+    totalOwners: 0,
+    successfulOwnerNotifications: 0
   };
 
   try {
-    // 1. Send email to business owner
-    console.log('📧 Sending owner email notification...');
-    const ownerEmailResult = await sendAdminNotification(orderData);
-    results.ownerEmail = ownerEmailResult;
+    // Get all configured owners
+    const allOwners = getStoreOwners();
+    const relevantOwners = getRelevantOwners(orderData, allOwners);
+    
+    results.totalOwners = relevantOwners.length;
+    console.log(`📋 Found ${relevantOwners.length} relevant owner(s) for this order`);
+    console.log('👥 Owners to notify:', relevantOwners.map(o => `${o.name} (${o.email || 'no email'}, ${o.phone || 'no phone'})`));
+    
+    // 1. Send emails to all relevant owners
+    console.log('📧 Sending owner email notifications...');
+    for (const owner of relevantOwners) {
+      if (owner.email) {
+        const emailResult = await sendOwnerEmail(orderData, owner);
+        results.ownerEmails.push({
+          owner: owner.name,
+          email: owner.email,
+          success: emailResult
+        });
+        if (emailResult) results.successfulOwnerNotifications++;
+      }
+    }
     
     // 2. Send email to customer
     console.log('📧 Sending customer email confirmation...');
     const customerEmailResult = await sendCustomerConfirmation(orderData);
     results.customerEmail = customerEmailResult;
     
-    // 3. Send SMS to business owner (your phone)
-    const ownerPhone = process.env.OWNER_PHONE_NUMBER;
-    if (ownerPhone) {
-      console.log('📱 Sending owner SMS notification...');
-      const ownerSMSResult = await sendOwnerSMS(orderData, ownerPhone);
-      results.ownerSMS = ownerSMSResult;
-    } else {
-      console.log('⚠️ Owner phone number not configured - skipping owner SMS');
+    // 3. Send SMS to all relevant owners
+    console.log('📱 Sending owner SMS notifications...');
+    for (const owner of relevantOwners) {
+      if (owner.phone) {
+        const smsResult = await sendOwnerSMS(orderData, owner.phone, owner);
+        results.ownerSMS.push({
+          owner: owner.name,
+          phone: owner.phone,
+          success: smsResult
+        });
+        if (smsResult) results.successfulOwnerNotifications++;
+      }
     }
     
     // 4. Send SMS to customer
@@ -331,7 +408,7 @@ export const sendOrderNotifications = async (orderData) => {
     const customerSMSResult = await sendOrderSMS(orderData);
     results.customerSMS = customerSMSResult;
     
-    console.log('✅ Notification results:', results);
+    console.log('✅ Multi-owner notification results:', results);
     return results;
     
   } catch (error) {
@@ -340,8 +417,102 @@ export const sendOrderNotifications = async (orderData) => {
   }
 };
 
+// Send email notification to a specific owner
+const sendOwnerEmail = async (orderData, owner) => {
+  if (!process.env.SENDGRID_API_KEY || process.env.SENDGRID_API_KEY === 'YOUR_SENDGRID_API_KEY_HERE') {
+    console.log(`📧 [DEMO MODE] Owner email would be sent to: ${owner.name} (${owner.email})`);
+    return true;
+  }
+
+  try {
+    const orderNumber = orderData.order_number || `#${orderData.id}`;
+    const storeName = orderData.store_name || orderData.pickup_location_name || 'Your Store';
+    const storeId = orderData.store_location_id || orderData.pickup_location_id || 'N/A';
+    
+    const emailContent = {
+      to: owner.email,
+      from: {
+        email: 'support@printphonecover.com',
+        name: 'PrintPhoneCase Order System'
+      },
+      replyTo: 'support@printphonecover.com',
+      subject: `🔔 New Order Alert - ${orderNumber} (${storeName})`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px;">🔔 New Order Alert</h1>
+            <p style="color: #f0f0f0; margin: 10px 0 0 0; font-size: 16px;">Hi ${owner.name}!</p>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px;">
+            <div style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #667eea;">
+              <h2 style="color: #333; margin: 0 0 15px 0; font-size: 24px;">Order: <span style="color: #667eea;">${orderNumber}</span></h2>
+              <p style="color: #666; margin: 0; font-size: 14px;">
+                <strong>Store:</strong> ${storeName} ${storeId !== 'N/A' ? `(ID: ${storeId})` : ''}<br>
+                <strong>Amount:</strong> <span style="color: #28a745; font-size: 18px; font-weight: bold;">$${orderData.amount || 'N/A'}</span>
+              </p>
+            </div>
+            
+            <div style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+              <h3 style="color: #333; margin: 0 0 15px 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">Customer Information</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 8px 0; font-weight: bold; color: #555; width: 30%;">Name:</td>
+                  <td style="padding: 8px 0; color: #333;">${orderData.contact_name || 'N/A'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Email:</td>
+                  <td style="padding: 8px 0; color: #333;">${orderData.contact_email || 'N/A'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Phone:</td>
+                  <td style="padding: 8px 0; color: #333;">${orderData.contact_phone || 'N/A'}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <div style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+              <h3 style="color: #333; margin: 0 0 15px 0; border-bottom: 2px solid #eee; padding-bottom: 10px;">Order Details</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 8px 0; font-weight: bold; color: #555; width: 30%;">Phone Model:</td>
+                  <td style="padding: 8px 0; color: #333;">${orderData.phone_model || 'N/A'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Case Type:</td>
+                  <td style="padding: 8px 0; color: #333; text-transform: capitalize;">${orderData.case_type || 'Regular'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Fulfillment:</td>
+                  <td style="padding: 8px 0; color: #333;">${orderData.fulfillment_method || orderData.delivery_method || 'N/A'}</td>
+                </tr>
+                <tr style="border-bottom: 1px solid #eee;">
+                  <td style="padding: 8px 0; font-weight: bold; color: #555;">Order Time:</td>
+                  <td style="padding: 8px 0; color: #333;">${new Date(orderData.created_at || Date.now()).toLocaleString()}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <div style="background: #667eea; color: white; padding: 20px; border-radius: 8px; text-align: center; margin-top: 20px;">
+              <p style="margin: 0; font-size: 16px;">Check your admin dashboard for complete order details and management options.</p>
+            </div>
+          </div>
+        </div>
+      `,
+      text: `New Order Alert for ${owner.name}\n\nOrder: ${orderNumber}\nStore: ${storeName}\nCustomer: ${orderData.contact_name || 'N/A'}\nPhone Model: ${orderData.phone_model || 'N/A'}\nAmount: $${orderData.amount || 'N/A'}\n\nCheck your admin dashboard for complete details.`
+    };
+
+    await sgMail.send(emailContent);
+    console.log(`✅ Owner email sent successfully to: ${owner.name} (${owner.email})`);
+    return true;
+  } catch (error) {
+    console.error(`❌ Failed to send owner email to ${owner.name}:`, error);
+    return false;
+  }
+};
+
 // SMS notification for business owner
-const sendOwnerSMS = async (orderData, rawOwnerPhone) => {
+const sendOwnerSMS = async (orderData, rawOwnerPhone, owner = null) => {
   const ownerPhone = formatPhoneNumber(rawOwnerPhone);
   
   if (!ownerPhone) {
@@ -366,17 +537,19 @@ const sendOwnerSMS = async (orderData, rawOwnerPhone) => {
     const amount = orderData.amount || orderData.total_amount || 'N/A';
     const customerName = orderData.contact_name || orderData.customer_name || 'N/A';
     const phoneModel = orderData.phone_model || 'N/A';
+    const storeName = orderData.store_name || orderData.pickup_location_name || 'Store';
+    const ownerName = owner ? owner.name : 'Owner';
     
-    const message = `🔔 NEW ORDER ALERT!\n\nOrder: ${orderNumber}\nCustomer: ${customerName}\nPhone: ${phoneModel}\nAmount: $${amount}\n\nCheck admin dashboard for details.`;
+    const message = `🔔 NEW ORDER - ${storeName}\n\nHi ${ownerName}!\n\nOrder: ${orderNumber}\nCustomer: ${customerName}\nPhone: ${phoneModel}\nAmount: $${amount}\n\nCheck admin for details.`;
     
-    console.log(`📱 Sending SMS to owner: ${ownerPhone}`);
+    console.log(`📱 Sending SMS to ${ownerName} (${ownerPhone})`);
     const result = await client.messages.create({
       body: message,
       from: process.env.TWILIO_PHONE_NUMBER,
       to: ownerPhone
     });
     
-    console.log('✅ Owner SMS sent successfully:', result.sid);
+    console.log(`✅ SMS sent to ${ownerName} (${ownerPhone}) - SID: ${result.sid}`);
     return true;
   } catch (error) {
     console.error('❌ Failed to send owner SMS:', error);
@@ -384,3 +557,6 @@ const sendOwnerSMS = async (orderData, rawOwnerPhone) => {
     return false;
   }
 };
+
+// Export additional utility functions for individual notifications
+export { sendOwnerEmail, sendOwnerSMS };
