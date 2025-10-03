@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 import sgMail from '@sendgrid/mail';
 import { supabase } from '../supabaseClient.js';
-import { sendOrderEmails } from '../utils/emailService.js';
+import { sendOrderEmails, sendOrderNotifications } from '../utils/emailService.js';
 
 // Ensure environment variables are loaded
 dotenv.config();
@@ -441,13 +441,14 @@ router.post('/create-order', async (req, res) => {
 
     console.log('Order created successfully:', order.id, 'Order Number:', order.order_number);
 
-    // Send email notifications using the email service
-    const emailResults = await sendOrderEmails(order);
+    // Send comprehensive notifications (email + SMS) to both admin and customer
+    const notificationResults = await sendOrderNotifications(order);
 
     res.json({
       success: true,
       order: order,
       message: 'Order created successfully',
+      notifications: notificationResults,
       order_number: order.order_number,
       emailSent: emailResults
     });

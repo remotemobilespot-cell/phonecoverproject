@@ -1,8 +1,25 @@
-import twilio from 'twilio';
+// Initialize Twilio client lazily when needed
+let twilioClient = null;
+let twilioInitialized = false;
 
-const twilioClient = process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN
-  ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
-  : null;
+const initializeTwilio = async () => {
+  if (twilioInitialized) return twilioClient;
+  
+  try {
+    if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+      const twilio = await import('twilio');
+      twilioClient = twilio.default(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+      console.log('✅ Twilio initialized successfully');
+    } else {
+      console.log('⚠️ Twilio credentials not found - SMS features disabled');
+    }
+  } catch (error) {
+    console.log('⚠️ Twilio not available - SMS features disabled:', error.message);
+  }
+  
+  twilioInitialized = true;
+  return twilioClient;
+};
 
 export const sendOrderSMS = async (orderData) => {
   const customerPhone = orderData.contact_phone || orderData.phone;
@@ -10,12 +27,15 @@ export const sendOrderSMS = async (orderData) => {
     console.log('No customer phone provided - skipping SMS');
     return false;
   }
-  if (!twilioClient || !process.env.TWILIO_PHONE_NUMBER) {
+  
+  const client = await initializeTwilio();
+  if (!client || !process.env.TWILIO_PHONE_NUMBER) {
     console.log('Twilio not configured - skipping SMS');
     return false;
   }
+  
   try {
-    await twilioClient.messages.create({
+    await client.messages.create({
       body: `Your order is confirmed! Thank you for shopping with PrintPhoneCover. Order #${orderData.order_number || orderData.id || ''}`,
       from: process.env.TWILIO_PHONE_NUMBER,
       to: customerPhone
@@ -236,4 +256,80 @@ export const sendOrderEmails = async (orderData) => {
     admin: adminResult,
     customer: customerResult
   };
+};
+
+// Enhanced notification system for both owner and customer
+export const sendOrderNotifications = async (orderData) => {
+  console.log('📧 Starting comprehensive order notifications...');
+  
+  const results = {
+    ownerEmail: false,
+    customerEmail: false,
+    ownerSMS: false,
+    customerSMS: false
+  };
+
+  try {
+    // 1. Send email to business owner
+    console.log('📧 Sending owner email notification...');
+    const ownerEmailResult = await sendAdminNotification(orderData);
+    results.ownerEmail = ownerEmailResult;
+    
+    // 2. Send email to customer
+    console.log('📧 Sending customer email confirmation...');
+    const customerEmailResult = await sendCustomerConfirmation(orderData);
+    results.customerEmail = customerEmailResult;
+    
+    // 3. Send SMS to business owner (your phone)
+    const ownerPhone = process.env.OWNER_PHONE_NUMBER;
+    if (ownerPhone) {
+      console.log('📱 Sending owner SMS notification...');
+      const ownerSMSResult = await sendOwnerSMS(orderData, ownerPhone);
+      results.ownerSMS = ownerSMSResult;
+    } else {
+      console.log('⚠️ Owner phone number not configured - skipping owner SMS');
+    }
+    
+    // 4. Send SMS to customer
+    console.log('📱 Sending customer SMS confirmation...');
+    const customerSMSResult = await sendOrderSMS(orderData);
+    results.customerSMS = customerSMSResult;
+    
+    console.log('✅ Notification results:', results);
+    return results;
+    
+  } catch (error) {
+    console.error('❌ Error in sendOrderNotifications:', error);
+    return results;
+  }
+};
+
+// SMS notification for business owner
+const sendOwnerSMS = async (orderData, ownerPhone) => {
+  const client = await initializeTwilio();
+  if (!client || !process.env.TWILIO_PHONE_NUMBER) {
+    console.log('⚠️ Twilio not configured - skipping owner SMS');
+    return false;
+  }
+  
+  try {
+    const orderNumber = orderData.order_number || `#${orderData.id}`;
+    const amount = orderData.amount || orderData.total_amount || 'N/A';
+    const customerName = orderData.contact_name || orderData.customer_name || 'N/A';
+    const phoneModel = orderData.phone_model || 'N/A';
+    
+    const message = `🔔 NEW ORDER ALERT!\n\nOrder: ${orderNumber}\nCustomer: ${customerName}\nPhone: ${phoneModel}\nAmount: $${amount}\n\nCheck admin dashboard for details.`;
+    
+    const result = await client.messages.create({
+      body: message,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: ownerPhone
+    });
+    
+    console.log('✅ Owner SMS sent successfully:', result.sid);
+    return true;
+  } catch (error) {
+    console.error('❌ Failed to send owner SMS:', error);
+    return false;
+  }
 };
