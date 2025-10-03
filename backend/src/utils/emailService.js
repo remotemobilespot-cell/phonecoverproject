@@ -21,29 +21,65 @@ const initializeTwilio = async () => {
   return twilioClient;
 };
 
+// Format phone number to E.164 format
+const formatPhoneNumber = (phone) => {
+  if (!phone) return null;
+  
+  // Remove all non-digit characters
+  const cleaned = phone.replace(/\D/g, '');
+  
+  // If it starts with 1 and has 11 digits, add +
+  if (cleaned.length === 11 && cleaned.startsWith('1')) {
+    return `+${cleaned}`;
+  }
+  
+  // If it has 10 digits, assume US number and add +1
+  if (cleaned.length === 10) {
+    return `+1${cleaned}`;
+  }
+  
+  // If it already starts with +, return as is
+  if (phone.startsWith('+')) {
+    return phone;
+  }
+  
+  console.log(`⚠️ Invalid phone number format: ${phone}`);
+  return null;
+};
+
 export const sendOrderSMS = async (orderData) => {
-  const customerPhone = orderData.contact_phone || orderData.phone;
+  const rawPhone = orderData.contact_phone || orderData.phone;
+  const customerPhone = formatPhoneNumber(rawPhone);
+  
   if (!customerPhone) {
-    console.log('No customer phone provided - skipping SMS');
+    console.log(`No valid customer phone provided - skipping SMS. Raw: ${rawPhone}`);
     return false;
   }
   
   const client = await initializeTwilio();
   if (!client || !process.env.TWILIO_PHONE_NUMBER) {
     console.log('Twilio not configured - skipping SMS');
+    console.log('Environment check:', {
+      twilioClient: !!client,
+      twilioPhone: !!process.env.TWILIO_PHONE_NUMBER,
+      accountSid: !!process.env.TWILIO_ACCOUNT_SID,
+      authToken: !!process.env.TWILIO_AUTH_TOKEN
+    });
     return false;
   }
   
   try {
-    await client.messages.create({
-      body: `Your order is confirmed! Thank you for shopping with PrintPhoneCover. Order #${orderData.order_number || orderData.id || ''}`,
+    console.log(`📱 Sending SMS to customer: ${customerPhone}`);
+    const result = await client.messages.create({
+      body: `Your order is confirmed! Thank you for shopping with PrintPhoneCase. Order #${orderData.order_number || orderData.id || ''}`,
       from: process.env.TWILIO_PHONE_NUMBER,
       to: customerPhone
     });
-    console.log('Order confirmation SMS sent successfully');
+    console.log('✅ Customer SMS sent successfully:', result.sid);
     return true;
   } catch (error) {
-    console.error('Failed to send order confirmation SMS:', error);
+    console.error('❌ Failed to send customer SMS:', error);
+    console.error('Error details:', error.message);
     return false;
   }
 };
@@ -305,10 +341,23 @@ export const sendOrderNotifications = async (orderData) => {
 };
 
 // SMS notification for business owner
-const sendOwnerSMS = async (orderData, ownerPhone) => {
+const sendOwnerSMS = async (orderData, rawOwnerPhone) => {
+  const ownerPhone = formatPhoneNumber(rawOwnerPhone);
+  
+  if (!ownerPhone) {
+    console.log(`⚠️ Invalid owner phone number format: ${rawOwnerPhone}`);
+    return false;
+  }
+  
   const client = await initializeTwilio();
   if (!client || !process.env.TWILIO_PHONE_NUMBER) {
     console.log('⚠️ Twilio not configured - skipping owner SMS');
+    console.log('Environment check:', {
+      twilioClient: !!client,
+      twilioPhone: !!process.env.TWILIO_PHONE_NUMBER,
+      accountSid: !!process.env.TWILIO_ACCOUNT_SID,
+      authToken: !!process.env.TWILIO_AUTH_TOKEN
+    });
     return false;
   }
   
@@ -320,6 +369,7 @@ const sendOwnerSMS = async (orderData, ownerPhone) => {
     
     const message = `🔔 NEW ORDER ALERT!\n\nOrder: ${orderNumber}\nCustomer: ${customerName}\nPhone: ${phoneModel}\nAmount: $${amount}\n\nCheck admin dashboard for details.`;
     
+    console.log(`📱 Sending SMS to owner: ${ownerPhone}`);
     const result = await client.messages.create({
       body: message,
       from: process.env.TWILIO_PHONE_NUMBER,
@@ -330,6 +380,7 @@ const sendOwnerSMS = async (orderData, ownerPhone) => {
     return true;
   } catch (error) {
     console.error('❌ Failed to send owner SMS:', error);
+    console.error('Error details:', error.message);
     return false;
   }
 };
